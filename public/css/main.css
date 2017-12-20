@@ -1,0 +1,3 @@
+.steps>li.pending .step, .steps>li.pending:before{
+    border-color: #ff8350;
+}

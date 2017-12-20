@@ -16,40 +16,71 @@
                     {{ csrf_field() }}
                     <fieldset>
                         <label class="block clearfix">
-                            <span class="block input-icon input-icon-right">
-                                <input type="text" class="form-control"
-                                       placeholder="Name" name="name"/>
+                            <span class="block input-icon input-icon-right {{ $errors->has('name') ? 'has-error' : '' }}">
+                                <input type="text" class="form-control" value="{{ old('name') }}"
+                                       placeholder="Name" name="name" required/>
                                 <i class="ace-icon fa fa-user"></i>
                             </span>
+                            <div class="help-block">
+                                @if ($errors->has('name'))
+                                    {{'Invalid name'}}
+                                @endif
+                            </div>
                         </label>
 
                         <label class="block clearfix">
-                            <span class="block input-icon input-icon-right">
-                                <input type="email" class="form-control"
-                                       placeholder="Email" name="email"/>
+                            <span class="block input-icon input-icon-right {{ $errors->has('name') ? 'has-error' : '' }}">
+                                <select class="form-control" name="gender" required>
+                                    <option value="M">Male</option>
+                                    <option value="F">Female</option>
+                                </select>
+                            </span>
+                            <div class="help-block">
+                                @if ($errors->has('gender'))
+                                    {{'Invalid gender'}}
+                                @endif
+                            </div>
+                        </label>
+
+                        <label class="block clearfix">
+                            <span class="block input-icon input-icon-right {{ $errors->has('email') ? 'has-error' : '' }}">
+                                <input type="email" class="form-control" value="{{ old('email') }}"
+                                       placeholder="Email" name="email" required/>
                                 <i class="ace-icon fa fa-envelope"></i>
                             </span>
+                            <div class="help-block">
+                                @if ($errors->has('email'))
+                                    {{'Invalid Email address'}}
+                                @endif
+                            </div>
                         </label>
 
                         <label class="block clearfix">
-                            <span class="block input-icon input-icon-right">
-                                <input type="password" class="form-control"
-                                       placeholder="Password" name="password"/>
+                            <span class="block input-icon input-icon-right {{ $errors->has('password') || $errors->has('password_confirmation') ? 'has-error' : '' }}">
+                                <input type="password" class="form-control" value="{{ old('password') }}"
+                                       placeholder="Password" name="password" required/>
                                 <i class="ace-icon fa fa-lock"></i>
                             </span>
                         </label>
 
                         <label class="block clearfix">
-                            <span class="block input-icon input-icon-right">
-                                <input type="password" class="form-control"
-                                       placeholder="Repeat password" name="password_confirmation"/>
+                            <span class="block input-icon input-icon-right {{ $errors->has('password') || $errors->has('password_confirmation') ? 'has-error' : '' }}">
+                                <input type="password" class="form-control" value="{{ old('password_confirmation') }}"
+                                       placeholder="Repeat password" name="password_confirmation" required/>
                                 <i class="ace-icon fa fa-retweet"></i>
                             </span>
+                            <div class="help-block">
+                                @if ($errors->has('password') || $errors->has('password_confirmation'))
+                                    {{'Check your password'}}
+                                @endif
+                            </div>
+
                         </label>
 
                         <label class="block clearfix">
                             <img src="/upload/avatar/default.png"
-                                 style="height: 100px;width:inherit;margin-bottom:15px;" class="img-thumbnail img-responsive center-block" id="avatarImg">
+                                 style="height: 100px;width:inherit;margin-bottom:15px;"
+                                 class="img-thumbnail img-responsive center-block" id="avatarImg">
                             <input type="file" accept="image/*" id="avatar" name="avatar">
                         </label>
 
@@ -80,6 +111,7 @@
             </div>
         </div><!-- /.widget-body -->
     </div><!-- /.signup-box -->
+
 @endsection
 
 @section('page-level-script')

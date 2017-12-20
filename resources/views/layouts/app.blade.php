@@ -79,12 +79,16 @@
 <script src="{{ asset('js/app.js') }}"></script>
 <script src="{{ asset('assets/js/jquery-2.1.4.min.js') }}"></script>
 
-<!-- Page Level Script -->
-@yield('page-level-script')
-
 <script type="text/javascript">
     if ('ontouchstart' in document.documentElement) document.write("<script src='assets/js/jquery.mobile.custom.min.js'>" + "<" + "/script>");
 </script>
+
+<!-- ace scripts -->
+<script src="{{ asset('assets/js/ace-elements.min.js') }}"></script>
+<script src="{{ asset('assets/js/ace.min.js') }}"></script>
+
+<!-- Page Level Script -->
+@yield('page-level-script')
 
 <!-- inline scripts related to this page -->
 <script type="text/javascript">

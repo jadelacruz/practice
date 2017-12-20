@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
+    private $aInject = array(
+        'sPage' => 'home',
+        'sSub' => ''
+    );
     /**
      * Create a new controller instance.
      *
@@ -23,6 +27,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        redirect()->route('login');
+        return view('home', $this->aInject);
     }
 }
