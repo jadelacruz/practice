@@ -41,12 +41,12 @@ class RecipientController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Recipient  $recipient
+     * @param  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Recipient $recipient)
+    public function show($id)
     {
-        //
+        return Recipient::where('id', '=', $id)->with('user')->first();
     }
 
     /**
@@ -81,5 +81,10 @@ class RecipientController extends Controller
     public function destroy(Recipient $recipient)
     {
         //
+    }
+
+    public function getPostRecipients($id)
+    {
+
     }
 }

@@ -3,6 +3,7 @@
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     <meta charset="utf-8"/>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Two menu - Ace Admin</title>
 
     <meta name="description" content=""/>
@@ -13,9 +14,9 @@
     <link rel="stylesheet" href="{{ asset('assets/font-awesome/4.5.0/css/font-awesome.min.css') }}"/>
 
     <!-- page specific plugin styles -->
-    @yield('page-level-style')
+@yield('page-level-style')
 
-    <!-- text fonts -->
+<!-- text fonts -->
     <link rel="stylesheet" href="{{ asset('assets/css/fonts.googleapis.com.css') }}"/>
     <!-- ace styles -->
     <link rel="stylesheet" href="{{ asset('assets/css/ace.min.css') }}" class="ace-main-stylesheet"
@@ -30,7 +31,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/ace-ie.min.css') }}"/>
     <![endif]-->
 
-    <link rel="stylesheet" href="{{ asset('css/main.css') }}" />
+    <link rel="stylesheet" href="{{ asset('css/main.css') }}"/>
 
     <!-- inline styles related to this page -->
 
@@ -70,7 +71,8 @@
                     data-target=".navbar-buttons">
                 <span class="sr-only">Toggle user menu</span>
 
-                <img src="{{ asset('upload/avatar/') . '/' . Auth::user()->avatar }}" alt="{{ Auth::user()->name }}'s Photo"/>
+                <img src="{{ asset('upload/avatar/') . '/' . Auth::user()->avatar }}"
+                     alt="{{ Auth::user()->name }}'s Photo"/>
             </button>
         </div>
 
@@ -223,7 +225,7 @@
 
         <ul class="nav nav-list">
             <li class="">
-                <a href="index.html">
+                <a href="{{ route('home') }}">
                     <i class="menu-icon fa fa-tachometer"></i>
                     <span class="menu-text"> Dashboard </span>
                 </a>
@@ -276,33 +278,33 @@
             </li>
 
             @if (Auth::user()->isAdmin())
-            <li class="{{ $sPage === 'post' ? 'active open' : '' }}">
-                <a href="#" class="dropdown-toggle">
-                    <i class="menu-icon fa fa-desktop"></i>
-                    <span class="menu-text">
+                <li class="{{ $sPage === 'post' ? 'active open' : '' }}">
+                    <a href="#" class="dropdown-toggle">
+                        <i class="menu-icon fa fa-desktop"></i>
+                        <span class="menu-text">
                         Post
                     </span>
 
-                    <b class="arrow fa fa-angle-down"></b>
-                </a>
+                        <b class="arrow fa fa-angle-down"></b>
+                    </a>
 
-                <b class="arrow"></b>
+                    <b class="arrow"></b>
 
-                <ul class="submenu">
-                    <li class="{{ $sSub === 'view' ? 'active' : '' }}">
-                        <a href="{{ route('post') }}">
-                            View
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                    <li class="{{ $sSub === 'create' ? 'active' : '' }}">
-                        <a href="{{ route('post.create') }}">
-                            Create
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                </ul>
-            </li>
+                    <ul class="submenu">
+                        <li class="{{ $sSub === 'view' ? 'active' : '' }}">
+                            <a href="{{ route('post') }}">
+                                View
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                        <li class="{{ $sSub === 'create' ? 'active' : '' }}">
+                            <a href="{{ route('post.create') }}">
+                                Create
+                            </a>
+                            <b class="arrow"></b>
+                        </li>
+                    </ul>
+                </li>
             @endif
 
         </ul><!-- /.nav-list -->
@@ -560,11 +562,6 @@
                             </div>
                         </div>
 
-                        <div class="hidden-md hidden-lg">
-                            <div class="well well-sm">
-                                You can place multiple toggle buttons for multiple menus anywhere inside navbar!
-                            </div>
-                        </div><!-- PAGE CONTENT ENDS -->
                     </div><!-- /.col -->
                 </div><!-- /.row -->
             </div><!-- /.page-content -->
@@ -596,7 +593,7 @@
             </div>
         </div>
     </div>
-    <form id="logout-form"method="POST" action="{{ route('logout') }}" hidden="hidden">
+    <form id="logout-form" method="POST" action="{{ route('logout') }}" hidden="hidden">
         {{ csrf_field() }}
     </form>
     <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">

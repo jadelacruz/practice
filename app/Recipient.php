@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Recipient extends Model
 {
     protected $fillable = [
-        'post_id', 'recipient_id', 'viewed_at', 'forwarded_at'
+        'post_id', 'user_id', 'recipient_id', 'viewed_at', 'forwarded_at'
     ];
 
     public function post()
@@ -17,6 +17,6 @@ class Recipient extends Model
 
     public function user()
     {
-        return $this->belongsTo('App\User', 'recipient_id', 'id');
+        return $this->belongsTo('App\User');
     }
 }

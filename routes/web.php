@@ -25,8 +25,12 @@ Route::post('/post', 'PostController@store');
 
 Route::get('/post/{post}', 'PostController@show');
 
+Route::get('/post/recipient/{post}', 'PostController@getRecipientByPostId');
+
 Route::get('/post/{post}/edit', 'PostController@edit')->name('post.edit');
 
-Route::put('/post', 'PostController@update');
+Route::delete('/post/{post}', 'PostController@destroy');
+
+Route::get('/recipient/{recipient}', 'RecipientController@show');
 
 Auth::routes();

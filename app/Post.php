@@ -14,6 +14,13 @@ class Post extends Model
     ];
 
     /**
+     * @var array
+     */
+    protected $guarded = [
+        'id', 'created_at', 'updated_at'
+    ];
+
+    /**
      * @return object
      */
     public function user()
@@ -28,7 +35,7 @@ class Post extends Model
      */
     public function recipient()
     {
-        return $this->hasMany(Recipient::class);
+        return $this->hasMany(Recipient::class)->with('user');
     }
 
     public function viewed()

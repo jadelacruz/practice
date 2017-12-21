@@ -30,7 +30,7 @@ class User extends Authenticatable
      */
     public function post()
     {
-        return $this->hasMany('App\Post');
+        return $this->hasMany(Post::class);
     }
 
     /**
@@ -38,18 +38,13 @@ class User extends Authenticatable
      *
      * @return object
      */
-    public function notif()
+    public function recipient()
     {
-        return $this->hasMany('App\Recipient', 'recipient_id', 'id');
+        return $this->hasMany(Recipient::class);
     }
 
     public function isAdmin()
     {
         return (boolean)$this->is_admin;
-    }
-
-    public function recipient()
-    {
-        return $this->where('id', '!=' , $this->id)->get();
     }
 }

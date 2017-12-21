@@ -8,34 +8,51 @@
     </div>
 
     <div class="col-sm-12">
-        <form class="form-horizontal" role="form">
-
-            <div class="form-group">
+        <form class="form-horizontal" role="form" action="{{ route('post') }}" method="POST">
+            {{ csrf_field() }}
+            <div class="form-group {{ $errors->has('title') ? 'has-error' : '' }}">
                 <label class="col-sm-3 control-label no-padding-right" for="title"> Title </label>
 
                 <div class="col-sm-9">
-                    <input type="text" id="title" placeholder="Title" class="col-xs-10 col-sm-5" required>
+                    <input type="text" id="title" name="title" placeholder="Title"
+                           class="col-xs-10 col-sm-5" value="{{ old('title') }}" required>
+                    @if ($errors->has('title'))
+                    <span class="help-inline col-xs-12 col-sm-12">
+                        <span class="middle"><i>{{ json_decode($errors)->title[0] }}</i></span>
+                    </span>
+                    @endif
                 </div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group {{ $errors->has('description') ? 'has-error' : '' }}">
                 <label class="col-sm-3 control-label no-padding-right" for="description"> Description </label>
 
                 <div class="col-sm-9">
-                    <input type="text" id="description" placeholder="Description" class="form-control" required>
+                    <input type="text" id="description" name="description" placeholder="Description"
+                           class="col-sm-12 col-xs-12" value="{{ old('description') }}" required>
+                    @if ($errors->has('description'))
+                        <span class="help-inline col-xs-12 col-sm-12">
+                        <span class="middle"><i>{{ json_decode($errors)->description[0] }}</i></span>
+                    </span>
+                    @endif
                 </div>
+
             </div>
 
-            <div class="form-group">
-                <label class="col-sm-3 control-label no-padding-top" for="duallist"> Select recipients: </label>
-
-                <div class="col-sm-9">
-                    <select multiple="multiple" size="10" name="duallistbox_demo1[]" id="duallist">
+            <div class="form-group {{ $errors->has('seq') ? 'has-error' : '' }}">
+                <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="food">Recipient/s</label>
+                <input type="hidden" id="seq" name="seq" value="" />
+                <div class="col-xs-12 col-sm-9">
+                    <select id="recipient" name="recipient[]" class="multiselect" multiple="">
                         @foreach ($aRecipient as $oRecipient)
                             <option value="{{ $oRecipient->id }}">{{ $oRecipient->name }}</option>
                         @endforeach
                     </select>
-
+                    @if ($errors->has('seq'))
+                    <span class="help-inline col-xs-12 col-sm-12">
+                        <span class="middle"><i>Please select at least 1 recipient.</i></span>
+                    </span>
+                    @endif
                 </div>
             </div>
 
@@ -51,7 +68,7 @@
 
             <div class="clearfix form-actions">
                 <div class="col-md-offset-5 col-md-7">
-                    <button class="btn btn-info" type="button">
+                    <button class="btn btn-info" type="submit">
                         <i class="ace-icon fa fa-check bigger-110"></i>
                         Submit
                     </button>
@@ -65,6 +82,7 @@
 
         </form>
     </div>
+
 @endsection
 
 @section('page-level-script')
@@ -73,25 +91,23 @@
     <script src="{{ asset('assets/js/bootstrap-multiselect.min.js') }}"></script>
     <script src="{{ asset('assets/js/select2.min.js') }}"></script>
     <script src="{{ asset('assets/js/jquery-typeahead.js') }}"></script>
+    <script src="{{ asset('assets/js/jquery-ui.custom.min.js') }}"></script>
+    <script src="{{ asset('assets/js/jquery.ui.touch-punch.min.js') }}"></script>
     <script>
         $(document).ready(function () {
-            var demo1 = $('select[name="duallistbox_demo1[]"]').bootstrapDualListbox({infoTextFiltered: '<span class="label label-purple label-lg">Filtered</span>'});
-            var container1 = demo1.bootstrapDualListbox('getContainer');
-            container1.find('.btn').addClass('btn-white btn-info btn-bold');
-            $('#duallist').change(function () {
+            function generateStep(aStep, aName) {
                 var iRecipients = 0;
                 var sStepLi = '';
                 var oStep = $('.steps');
 
-                $('select[name="duallistbox_demo1[]_helper2"]').children('option')
-                    .each(function (index, object) {
-                        var iCounter = index + 1;
-                        var sName = object.text;
-                        sStepLi += '<li data-step="' + iCounter + '">' +
-                                        '<span class="step">' + iCounter + '</span>' +
-                                        '<span class="title">' + sName + '</span>' +
-                                    '</li>';
-                        iRecipients++;
+                aStep.map(function (value, index) {
+                    var iCounter = index + 1;
+                    var sName = aName[index];
+                    sStepLi += '<li data-step="' + iCounter + '">' +
+                        '<span class="step">' + iCounter + '</span>' +
+                        '<span class="title">' + sName + '</span>' +
+                        '</li>';
+                    iRecipients++;
                 });
 
                 if (iRecipients > 1) {
@@ -100,7 +116,56 @@
                 } else {
                     oStep.empty();
                 }
+            }
+            $('#duallist').change(function () {
+
             });
+
+            var aRecipient = [];
+            var aName = [];
+            $('.recipient input[type="checkbox"]').on('change', function (e) {
+                var oSelectedRecipient = $('#recipient').find('option[value="' + this.value + '"]');
+                var oSeq = $('#seq');
+                var iRecipientId = oSelectedRecipient.val();
+                var sRecipientName = oSelectedRecipient.html();
+                var bRecipientExists = (aRecipient.indexOf(iRecipientId) !== -1);
+                var iRecipientIndex = (aRecipient.indexOf(iRecipientId));
+
+                if (this.checked === true && bRecipientExists === false) {
+                    aRecipient.push(iRecipientId);
+                    aName.push(sRecipientName);
+                } else if (bRecipientExists === true && iRecipientIndex !== -1) {
+                    aRecipient.splice(iRecipientIndex, 1);
+                    aName.splice(iRecipientIndex, 1);
+                }
+
+                if (aRecipient.length > 0 && aName.length > 0) {
+                    oSeq.val(aRecipient.toString());
+                } else {
+                    oSeq.val('');
+                }
+                generateStep(aRecipient, aName);
+            });
+
+        });
+
+        $('.multiselect').multiselect({
+            enableFiltering: true,
+            enableHTML: true,
+            buttonClass: 'btn btn-white btn-primary',
+            templates: {
+                button: '<button type="button" class="multiselect dropdown-toggle" data-toggle="dropdown"><span class="multiselect-selected-text"></span> &nbsp;<b class="fa fa-caret-down"></b></button>',
+                ul: '<ul class="multiselect-container dropdown-menu"></ul>',
+                filter: '<li class="multiselect-item filter"><div class="input-group"><span class="input-group-addon"><i class="fa fa-search"></i></span><input class="form-control multiselect-search" type="text"></div></li>',
+                filterClearBtn: '<span class="input-group-btn"><button class="btn btn-default btn-white btn-grey multiselect-clear-filter" type="button"><i class="fa fa-times-circle red2"></i></button></span>',
+                li: '<li><a tabindex="0" class="recipient"><label></label></a></li>',
+                divider: '<li class="multiselect-item divider"></li>',
+                liGroup: '<li class="multiselect-item multiselect-group"><label></label></li>'
+            }
+        });
+
+        $(document).one('ajaxloadstart.page', function(e) {
+            $('.multiselect').multiselect('destroy');
         });
     </script>
 @endsection

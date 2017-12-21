@@ -19,78 +19,74 @@
         <!-- div.table-responsive -->
 
         <!-- div.dataTables_borderWrap -->
-        <div>
-            <table id="dynamic-table" class="table table-striped table-bordered table-hover">
-                <thead>
-                <tr role="row">
-                    <th class="center" rowspan="1">
+        <table id="dynamic-table" class="table table-striped table-bordered table-hover">
+            <thead>
+            <tr role="row">
+                <th class="center" rowspan="1">
+                    <label class="pos-rel">
+                        <input type="checkbox" class="ace">
+                        <span class="lbl"></span>
+                    </label>
+                </th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>No. of Recipient/s</th>
+                <th>No. of Notified Recipient/s</th>
+                <th>No. of Confirmed Recipient/s</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+            </thead>
+
+            <tbody>
+            @foreach($aPost as $oPost)
+                <tr id="{{ $oPost->id }}">
+                    <td class="center">
                         <label class="pos-rel">
                             <input type="checkbox" class="ace">
                             <span class="lbl"></span>
                         </label>
-                    </th>
-                    <th>Title</th>
-                    <th>Description</th>
-                    <th>No. of Recipients</th>
-                    <th>No. of Viewed Recipients</th>
-                    <th>No. of Confirmed Recipients</th>
-                    <th>Status</th>
-                    <th></th>
+                    </td>
+
+                    <td>{{ $oPost->title }}</td>
+
+                    <td>{{ $oPost->description }}</td>
+
+                    <td>{{ count($oPost->recipient) }}</td>
+
+                    <td>{{ count($oPost->viewed) }}</td>
+
+                    <td>{{ count($oPost->confirmed) }}</td>
+
+                    <td>
+                        <span class="label label-sm label-warning">{{ strtoupper($oPost->status) }}</span>
+                    </td>
+
+                    <td>
+                        <div class="hidden-sm hidden-xs action-buttons">
+                            <a class="blue btnView" href="#">
+                                <i class="ace-icon fa fa-eye bigger-130"></i>
+                            </a>
+
+                            <a class="green" href="{{ route('post.edit', $oPost->id) }}">
+                                <i class="ace-icon fa fa-pencil bigger-130"></i>
+                            </a>
+
+                            <a class="red btnDelete" href="#">
+                                <i class="ace-icon fa fa-trash-o bigger-130"></i>
+                            </a>
+                        </div>
+                    </td>
                 </tr>
-                </thead>
-
-                <tbody>
-                @foreach($aPost as $oPost)
-                    <tr id="{{ $oPost->id }}">
-                        <td class="center">
-                            <label class="pos-rel">
-                                <input type="checkbox" class="ace">
-                                <span class="lbl"></span>
-                            </label>
-                        </td>
-
-                        <td>{{ $oPost->title }}</td>
-
-                        <td>{{ $oPost->description }}</td>
-
-                        <td>{{ count($oPost->recipient) }}</td>
-
-                        <td>{{ count($oPost->viewed) }}</td>
-
-                        <td>{{ count($oPost->confirmed) }}</td>
-
-                        <td>
-                            <span class="label label-sm label-warning">{{ strtoupper($oPost->status) }}</span>
-                        </td>
-
-                        <td>
-                            <div class="hidden-sm hidden-xs action-buttons">
-                                <a class="blue btnView" href="#" >
-                                    <i class="ace-icon fa fa-eye bigger-130"></i>
-                                </a>
-
-                                <a class="green" href="{{ route('post.edit', $oPost->id) }}">
-                                    <i class="ace-icon fa fa-pencil bigger-130"></i>
-                                </a>
-
-                                <a class="red" href="#">
-                                    <i class="ace-icon fa fa-trash-o bigger-130"></i>
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                @endforeach
-                </tbody>
-            </table>
-        </div>
-
-
+            @endforeach
+            </tbody>
+        </table>
 
         <div id="modal-wizard" class="modal">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div id="modal-wizard-container">
-                        <div class="modal-header">
+                        <div class="modal-header center">
 
                         </div>
 
@@ -116,25 +112,20 @@
                                     <span class="title">Other Info</span>
                                 </li>
                             </ul>
-                        </div>
-                        <table id="simple-table" class="table  table-bordered table-hover">
-                            <thead>
-                            <tr>
-                                <th class="center">
-                                    <label class="pos-rel">
-                                        <input type="checkbox" class="ace"/>
-                                        <span class="lbl"></span>
-                                    </label>
-                                </th>
-                                <th>Recipient Name</th>
-                                <th>Received Date</th>
-                                <th>Confirmation Date</th>
-                                <th class="hidden-480">Date Forwarded</th>
-                                <th>Status</th>
-                            </tr>
-                            </thead>
+                            <hr/>
+                            <table id="simple-table" class="table  table-bordered table-hover">
+                                <thead>
+                                <tr>
+                                    <th class="center">&nbsp;</th>
+                                    <th>Recipient Name</th>
+                                    <th>Received Date</th>
+                                    <th>Confirmation Date</th>
+                                    <th class="hidden-480">Date Forwarded</th>
+                                    <th>Status</th>
+                                </tr>
+                                </thead>
 
-                            <tbody>
+                                <tbody>
                                 <tr>
                                     <td class="center">
                                         <label class="pos-rel">
@@ -142,16 +133,16 @@
                                             <span class="lbl"></span>
                                         </label>
                                     </td>
-
                                     <td>name</td>
-
                                     <td></td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
                                 </tr>
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
+                        </div>
+
                     </div>
 
                     <div class="modal-footer wizard-actions">
@@ -160,8 +151,8 @@
                             Prev
                         </button>
 
-                        <button class="btn btn-success btn-sm btn-next" data-last="Finish">
-                            Next
+                        <button class="btn btn-success btn-sm btn-next">
+                            Ok
                             <i class="ace-icon fa fa-arrow-right icon-on-right"></i>
                         </button>
 
@@ -186,23 +177,59 @@
     <script src="{{ asset('assets/js/buttons.colVis.min.js') }}"></script>
     <script src="{{ asset('assets/js/dataTables.select.min.js') }}"></script>
     <script>
-        $('body').on('click', '.btnView', function () {
+        function generateRecipientTableData(oPost) {
+            var sTable = '';
+            if (typeof(oPost) === 'object') {
+                oPost.recipient.map(function (object) {
+                    sTable += '<tr>' +
+                        '<td class="center">' +
+                        '<label class="pos-rel">' +
+                        '<input type="checkbox" class="ace"/>' +
+                        '<span class="lbl"></span>' +
+                        '</label>' +
+                        '</td>' +
+                        '<td>' + object.user.name + '</td>' +
+                        '<td>' + (object.received_at || 'N/A') + '</td>' +
+                        '<td>' + (object.confirmed_at || 'N/A') + '</td>' +
+                        '<td>' + (object.forwarded_at || 'N/A') + '</td>' +
+                        '<td>' + (oPost.status) + '</td>' +
+                        '</tr>';
+                });
+
+            }
+            $('#simple-table').find('tbody').empty().append(sTable);
+            $('#modal-wizard').find('.modal-header').html('<h4>' + oPost.title.toUpperCase() + '</h4>');
+        };
+
+        $('#dynamic-table').on('click', '.btnView', function () {
             $('#modal-wizard').fadeToggle('slow', 'linear').modal('show');
             var sId = $(this).closest('tr').attr('id');
             $.ajax({
                 method: 'GET',
-                url: '/post/' + sId,
+                url: '/post/recipient/' + sId,
                 dataType: 'json'
             }).done(function (response) {
-                console.log(response);
+                generateRecipientTableData(response);
             });
         });
 
+        $('#dynamic-table').on('click', '.btnDelete', function () {
+            var sId = $(this).closest('tr').attr('id');
+            $.ajax({
+               headers: {
+                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+               },
+               method: 'DELETE',
+               url: '/post/' + sId,
+               dataType: 'json'
+           }).done(function (response) {
+               console.log(response);
+           });
+        });
+
         jQuery(function ($) {
-            //initiate dataTables plugin
             var myTable =
                 $('#dynamic-table')
-                //.wrap("<div class='dataTables_borderWrap' />")   //if you are applying horizontal scrolling (sScrollX)
                     .DataTable({
                         bAutoWidth: false,
                         "aoColumns": [
