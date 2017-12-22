@@ -165,6 +165,22 @@
             </div>
         </div>
     </div>
+
+    <div class="col-xs-12">
+        <div id="dialog-confirm" class="hide">
+            <div class="alert alert-info bigger-110">
+                These items will be permanently deleted and cannot be recovered.
+            </div>
+
+            <div class="space-6"></div>
+
+            <p class="bigger-110 bolder center grey">
+                <i class="ace-icon fa fa-hand-o-right blue bigger-120"></i>
+                Are you sure?
+            </p>
+        </div><!-- #dialog-confirm -->
+    </div>
+
 @endsection
 
 @section('page-level-script')
@@ -176,6 +192,8 @@
     <script src="{{ asset('assets/js/buttons.print.min.js') }}"></script>
     <script src="{{ asset('assets/js/buttons.colVis.min.js') }}"></script>
     <script src="{{ asset('assets/js/dataTables.select.min.js') }}"></script>
+    <script src="{{ asset('assets/js/jquery-ui.min.js') }}"></script>
+    <script src="{{ asset('assets/js/jquery.ui.touch-punch.min.js') }}"></script>
     <script>
         function generateRecipientTableData(oPost) {
             var sTable = '';
@@ -184,7 +202,7 @@
                     sTable += '<tr>' +
                         '<td class="center">' +
                         '<label class="pos-rel">' +
-                        '<input type="checkbox" class="ace"/>' +
+                        '<input type="checkbox" class="ace" onclick="return false;" />' +
                         '<span class="lbl"></span>' +
                         '</label>' +
                         '</td>' +
@@ -215,16 +233,40 @@
 
         $('#dynamic-table').on('click', '.btnDelete', function () {
             var sId = $(this).closest('tr').attr('id');
-            $.ajax({
-               headers: {
-                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-               },
-               method: 'DELETE',
-               url: '/post/' + sId,
-               dataType: 'json'
-           }).done(function (response) {
-               console.log(response);
-           });
+            $( "#dialog-confirm" ).removeClass('hide').dialog({
+                resizable: false,
+                width: '320',
+                modal: true,
+                buttons: [
+                    {
+                        html: "<i class='ace-icon fa fa-trash-o bigger-110'></i>&nbsp; Delete all items",
+                        "class" : "btn btn-danger btn-minier",
+                        click: function() {
+                            $( this ).dialog( "close" );
+                            $.ajax({
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                },
+                                method: 'DELETE',
+                                url: '/post/' + sId,
+                                dataType: 'json'
+                            }).done(function (response) {
+                                if (response === true) {
+                                    alert('deleted');
+                                    location.reload();
+                                }
+                            });
+                        }
+                    },
+                    {
+                        html: "<i class='ace-icon fa fa-times bigger-110'></i>&nbsp; Cancel",
+                        "class" : "btn btn-minier",
+                        click: function() {
+                            $( this ).dialog( "close" );
+                        }
+                    }
+                ]
+            });
         });
 
         jQuery(function ($) {
@@ -242,7 +284,6 @@
                             style: 'multi'
                         }
                     });
-
 
             $.fn.dataTable.Buttons.defaults.dom.container.className = 'dt-buttons btn-overlap btn-group btn-overlap';
 
@@ -283,6 +324,7 @@
                     }
                 ]
             });
+
             myTable.buttons().container().appendTo($('.tableTools-container'));
 
             //style the message box
@@ -292,13 +334,9 @@
                 $('.dt-button-info').addClass('gritter-item-wrapper gritter-info gritter-center white');
             });
 
-
             var defaultColvisAction = myTable.button(0).action();
             myTable.button(0).action(function (e, dt, button, config) {
-
                 defaultColvisAction(e, dt, button, config);
-
-
                 if ($('.dt-button-collection > .dropdown-menu').length == 0) {
                     $('.dt-button-collection')
                         .wrapInner('<ul class="dropdown-menu dropdown-light dropdown-caret dropdown-caret" />')
@@ -402,4 +440,8 @@
             /***************/
         });
     </script>
+@endsection
+
+@section('page-level-style')
+    <link rel="stylesheet" href="{{ asset('assets/css/jquery-ui.min.css') }}" />
 @endsection

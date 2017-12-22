@@ -63,16 +63,18 @@ class PostController extends Controller
         $aRequest = $request->all();
         $this->validator($aRequest)->validate();
         $aSeq = explode(',', $aRequest['seq']);
-        $oPost = new Post;
-        $oPost->user_id = Auth::user()->id;
-        $oPost->title = $aRequest['title'];
-        $oPost->description = $aRequest['description'];
-        $oPost->save();
+
+        $oPost = Post::create([
+            'user_id'     => Auth::user()->id,
+            'title'       => $aRequest['title'],
+            'description' => $aRequest['description']
+        ]);
 
         foreach ($aSeq as $sUserId) {
-            $aRecipient['post_id'] = $oPost->id;
-            $aRecipient['user_id'] = (int)$sUserId;
-            Recipient::create($aRecipient);
+            Recipient::create([
+                'post_id' => $oPost->id,
+                'user_id' => (int)$sUserId
+            ]);
         }
 
         return redirect()->route('post.create');

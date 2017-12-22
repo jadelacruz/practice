@@ -29,7 +29,7 @@ return [
     |
     */
 
-    'host' => env('MAIL_HOST', 'smtp.gmail.com'),
+    'host' => env('MAIL_HOST', ''),
 
     /*
     |--------------------------------------------------------------------------
@@ -56,8 +56,8 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'jhon.aldrin.delacruz@gmail.com'),
-        'name' => env('MAIL_FROM_NAME', 'Me'),
+        'address' => env('MAIL_FROM_ADDRESS', 'user'),
+        'name' => env('MAIL_FROM_NAME', 'user'),
     ],
 
     /*
