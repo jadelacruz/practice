@@ -33,4 +33,6 @@ Route::delete('/post/{post}', 'PostController@destroy');
 
 Route::get('/recipient/{recipient}', 'RecipientController@show');
 
+Route::get('/recipient/get', 'RecipientController@get');
+
 Auth::routes();

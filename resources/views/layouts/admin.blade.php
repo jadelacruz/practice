@@ -78,10 +78,11 @@
 
         <div class="navbar-buttons navbar-header pull-right  collapse navbar-collapse" role="navigation">
             <ul class="nav ace-nav">
+                @if (Auth::user()->isAdmin() === false)
                 <li class="purple dropdown-modal">
                     <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                         <i class="ace-icon fa fa-bell icon-animated-bell"></i>
-                        <span class="badge badge-danger">5</span>
+                        <span class="badge badge-danger">{{ count(Auth::user()->recipient()->notViewed()->get()) }}</span>
                     </a>
 
                     <div class="dropdown-menu-right dropdown-navbar dropdown-menu dropdown-caret dropdown-close">
@@ -90,7 +91,7 @@
                                 <li class="active">
                                     <a data-toggle="tab" href="#navbar-messages">
                                         Messages
-                                        <span class="badge badge-danger">5</span>
+                                        <span class="badge badge-danger">{{ count(Auth::user()->recipient()->notViewed()->get()) }}</span>
                                     </a>
                                 </li>
                             </ul><!-- .nav-tabs -->
@@ -100,24 +101,24 @@
                                     <ul class="dropdown-menu-right dropdown-navbar dropdown-menu">
                                         <li class="dropdown-content">
                                             <ul class="dropdown-menu dropdown-navbar">
+                                            @foreach(Auth::user()->recipient()->notViewed()->get() as $oNotif)
                                                 <li>
                                                     <a href="#">
-                                                        <img src="{{ asset('assets/images/avatars/avatar2.png') }}"
-                                                             class="msg-photo"
-                                                             alt="Kate's Avatar"/>
+                                                        <img src="{{ asset('upload/avatar/') . '/' . $oNotif->post->user->avatar }}" class="msg-photo" alt="oks" />
                                                         <span class="msg-body">
                                                             <span class="msg-title">
-                                                                <span class="blue">Kate:</span>
-                                                                Ciao sociis natoque eget urna mollis ornare ...
+                                                                <span class="blue">{{ strtoupper($oNotif->post->user->name) }}</span>
+                                                                {{ $oNotif->post->title }}
                                                             </span>
 
                                                             <span class="msg-time">
                                                                 <i class="ace-icon fa fa-clock-o"></i>
-                                                                <span>1:33 pm</span>
+                                                                <span>{{ $oNotif->created_at->diffForHumans() }}</span>
                                                             </span>
                                                         </span>
                                                     </a>
                                                 </li>
+                                            @endforeach
                                                 <li class="dropdown-footer">
                                                     <a href="inbox.html">
                                                         See all messages
@@ -132,6 +133,7 @@
                         </div><!-- /.tabbable -->
                     </div><!-- /.dropdown-menu -->
                 </li>
+                @endif
 
                 <li class="light-blue dropdown-modal">
                     <a data-toggle="dropdown" href="#" class="dropdown-toggle">
@@ -185,7 +187,7 @@
 
     </script>
 
-    <div id="sidebar" class="sidebar                  responsive                    ace-save-state">
+    <div id="sidebar" class="sidebar responsive ace-save-state">
         <script type="text/javascript">
             try {
                 ace.settings.loadState('sidebar')
@@ -277,8 +279,8 @@
                 <b class="arrow"></b>
             </li>
 
-            @if (Auth::user()->isAdmin())
                 <li class="{{ $sPage === 'post' ? 'active open' : '' }}">
+
                     <a href="#" class="dropdown-toggle">
                         <i class="menu-icon fa fa-desktop"></i>
                         <span class="menu-text">
@@ -297,15 +299,16 @@
                             </a>
                             <b class="arrow"></b>
                         </li>
+                        @if (Auth::user()->isAdmin())
                         <li class="{{ $sSub === 'create' ? 'active' : '' }}">
                             <a href="{{ route('post.create') }}">
                                 Create
                             </a>
                             <b class="arrow"></b>
                         </li>
+                        @endif
                     </ul>
                 </li>
-            @endif
 
         </ul><!-- /.nav-list -->
 
@@ -651,6 +654,33 @@
         console.log('clicked');
         $('#logout-form').submit();
     });
+
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            method: 'GET',
+            url: '/recipient/getUserNotif',
+            dataType: 'json'
+        }).done(function (response) {
+            console.log(response)
+        });
+
+    function showNotification(sTitle, sBody, sIcon, iTimeOut ) {
+        iTimeOut = iTimeOut || 7000;
+        if(window.Notification && Notification.permission !== "denied") {
+            Notification.requestPermission(function(status) {  // status is "granted", if accepted by user
+                var n = new Notification(sTitle, {
+                    body: sBody,
+                    icon: sIcon
+                });
+                setTimeout(function() {n.close()}, 7000)
+            });
+        }
+    }
+
+    showNotification('myTitle', 'myBody', '/upload/avatar/default.png');
+
 </script>
 </body>
 </html>

@@ -1,3 +1,55 @@
 .steps>li.pending .step, .steps>li.pending:before{
-    border-color: #ff8350;
+    border-color: #ff9c59;
+}
+
+.table>tbody>tr.pending>td {
+    background-color: #ff9c59;
+    color: #fff;
+}
+
+.table>tbody>tr.pending:hover>td {
+    background-color: #ff8c30;
+    color: #000;
+}
+
+.steps>li.received.step, .steps>li.received:before{
+    border-color: #5293C4;
+}
+
+.table>tbody>tr.received>td {
+    background-color: #5293C4;
+    color: #fff;
+}
+
+.table>tbody>tr.received:hover>td {
+    background-color: #548ac4;
+    color: #000;
+}
+
+.steps>li.confirmed .step, .steps>li.confirmed:before{
+    border-color: #398439;
+}
+
+.table>tbody>tr.confirmed>td {
+    background-color: #398439;
+    color: #fff;
+}
+
+.table>tbody>tr.confirmed:hover>td {
+    background-color: #33842f;
+    color: #000;
+}
+
+.steps>li.forwarded .step, .steps>li.forwarded:before{
+    border-color: #A069C3;
+}
+
+.table>tbody>tr.forwarded>td {
+    background-color: #A069C3;
+    color: #fff;
+}
+
+.table>tbody>tr.forwarded:hover>td {
+    background-color: #b368c3;
+    color: #000;
 }

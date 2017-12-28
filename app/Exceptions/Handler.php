@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Session\TokenMismatchException;
 
 class Handler extends ExceptionHandler
 {
@@ -44,10 +45,18 @@ class Handler extends ExceptionHandler
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Exception  $exception
-     * @return \Illuminate\Http\Response
+     * @return object
      */
     public function render($request, Exception $exception)
     {
+        if ($exception instanceof TokenMismatchException === true)
+        {
+            return redirect()
+                ->back()
+                ->withInput($request->except('password', '_token'))
+                ->withError('Validation Token has expired. Please try again');
+        }
+
         return parent::render($request, $exception);
     }
 }

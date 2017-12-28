@@ -37,14 +37,4 @@ class Post extends Model
     {
         return $this->hasMany(Recipient::class)->with('user');
     }
-
-    public function viewed()
-    {
-        return $this->hasMany(Recipient::class)->whereNotNull('viewed_at');
-    }
-
-    public function confirmed()
-    {
-        return $this->hasMany(Recipient::class)->whereNotNull('confirmed_at');
-    }
 }

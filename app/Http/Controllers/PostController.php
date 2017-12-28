@@ -25,7 +25,7 @@ class PostController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('admin');
+        $this->middleware('admin', ['only' => 'create']);
     }
 
     /**
@@ -36,7 +36,16 @@ class PostController extends Controller
     public function index()
     {
         $this->aInject['sSub'] = 'view';
-        $this->aInject['aPost'] = Auth::user()->post;
+        $this->aInject['aPost'] = array();
+        if (Auth::user()->isAdmin() === true) {
+            $this->aInject['aPost'] = Auth::user()->post()->orderBy('created_at', 'desc')->get();
+        } else {
+            $aRecipient = Auth::user()->recipient()->with('post')->orderBy('created_at', 'desc')->get();
+            foreach($aRecipient as $aRow) {
+                $this->aInject['aPost'][] = $aRow['post'];
+            }
+        }
+
         return view('post.view', $this->aInject);
     }
 

@@ -1,159 +1,6 @@
 @extends('layouts.admin')
 
 @section('content')
-    <div class="page-header">
-        <h1>
-            Post Page
-        </h1>
-    </div>
-
-    <div class="col-xs-12">
-        <div class="clearfix">
-            <div class="pull-right tableTools-container">
-            </div>
-        </div>
-        <div class="table-header">
-            Results for "Latest Post"
-        </div>
-
-        <!-- div.table-responsive -->
-
-        <!-- div.dataTables_borderWrap -->
-        <table id="dynamic-table" class="table table-striped table-bordered table-hover">
-            <thead>
-            <tr role="row">
-                <th class="center" rowspan="1">
-                    <label class="pos-rel">
-                        <input type="checkbox" class="ace">
-                        <span class="lbl"></span>
-                    </label>
-                </th>
-                <th>Title</th>
-                <th>Description</th>
-                <th>No. of Recipient/s</th>
-                <th>No. of Notified Recipient/s</th>
-                <th>No. of Received Recipient/s</th>
-                <th>No. of Confirmed Recipient/s</th>
-                <th>Status</th>
-                <th></th>
-            </tr>
-            </thead>
-
-            <tbody>
-            @foreach($aPost as $oPost)
-                <tr id="{{ $oPost->id }}">
-                    <td class="center">
-                        <label class="pos-rel">
-                            <input type="checkbox" class="ace">
-                            <span class="lbl"></span>
-                        </label>
-                    </td>
-
-                    <td>{{ $oPost->title }}</td>
-
-                    <td>{{ $oPost->description }}</td>
-
-                    <td>{{ count($oPost->recipient) }}</td>
-
-                    <td>{{ count($oPost->recipient()->viewed()->get()) }}</td>
-
-                    <td>{{ count($oPost->recipient()->received()->get()) }}</td>
-
-                    <td>{{ count($oPost->recipient()->confirmed()->get()) }}</td>
-
-                    <td>
-                        <span class="label label-sm label-{{ ($oPost->status === 'pending') ? 'warning' : 'success'}}">{{ strtoupper($oPost->status) }}</span>
-                    </td>
-
-                    <td>
-                        <div class="hidden-sm hidden-xs action-buttons">
-                            <a class="blue btnView" href="#">
-                                <i class="ace-icon fa fa-eye bigger-130"></i>
-                            </a>
-                            @if(Auth::user()->isAdmin() === true)
-                            <a class="green" href="{{ route('post.edit', $oPost->id) }}">
-                                <i class="ace-icon fa fa-pencil bigger-130"></i>
-                            </a>
-
-                            <a class="red btnDelete" href="#">
-                                <i class="ace-icon fa fa-trash-o bigger-130"></i>
-                            </a>
-                            @endif
-                        </div>
-                    </td>
-                </tr>
-            @endforeach
-            </tbody>
-        </table>
-
-        <div id="modal-wizard" class="modal">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div id="modal-wizard-container">
-                        <div class="modal-header center">
-
-                        </div>
-
-                        <div class="modal-body">
-                            <ul class="steps">
-
-                            </ul>
-                            <hr/>
-                            <table id="simple-table" class="table  table-bordered table-hover">
-                                <thead>
-                                <tr>
-                                    <th class="center">&nbsp;</th>
-                                    <th>Recipient Name</th>
-                                    <th>Received Date</th>
-                                    <th>Confirmation Date</th>
-                                    <th class="hidden-480">Date Forwarded</th>
-                                    <th>Status</th>
-                                </tr>
-                                </thead>
-
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
-
-                    </div>
-
-                    <div class="modal-footer wizard-actions">
-                        <button class="btn btn-sm btn-prev">
-                            <i class="ace-icon fa fa-arrow-left"></i>
-                            Prev
-                        </button>
-
-                        <button class="btn btn-success btn-sm btn-next">
-                            Ok
-                            <i class="ace-icon fa fa-arrow-right icon-on-right"></i>
-                        </button>
-
-                        <button class="btn btn-danger btn-sm pull-left" data-dismiss="modal">
-                            <i class="ace-icon fa fa-times"></i>
-                            Cancel
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-xs-12">
-        <div id="dialog-confirm" class="hide">
-            <div class="alert alert-info bigger-110">
-                These items will be permanently deleted and cannot be recovered.
-            </div>
-
-            <div class="space-6"></div>
-
-            <p class="bigger-110 bolder center grey">
-                <i class="ace-icon fa fa-hand-o-right blue bigger-120"></i>
-                Are you sure?
-            </p>
-        </div><!-- #dialog-confirm -->
-    </div>
-
 @endsection
 
 @section('page-level-script')
@@ -168,29 +15,14 @@
     <script src="{{ asset('assets/js/jquery-ui.min.js') }}"></script>
     <script src="{{ asset('assets/js/jquery.ui.touch-punch.min.js') }}"></script>
     <script>
-        function generateRecipientTableData(oPost) {
+     /*   function generateRecipientTableData(oPost) {
             var sTable = '';
-            var sRecipient = '';
             if (typeof(oPost) === 'object') {
-                oPost.recipient.map(function (object, index) {
-                    var sStatus = 'pending';
-
-                    if (object.received_at !== null) {
-                        sStatus = 'received';
-                    }
-
-                    if (object.confirmed_at !== null) {
-                        sStatus = 'confirmed';
-                    }
-
-                    if (object.forwarded_at !== null) {
-                        sStatus = 'forwarded';
-                    }
-
-                    sTable += '<tr class="' + sStatus + '">' +
+                oPost.recipient.map(function (object) {
+                    sTable += '<tr>' +
                         '<td class="center">' +
                         '<label class="pos-rel">' +
-                        '<input type="checkbox" class="ace" onclick="return false;"' + ((sStatus === 'forwarded') ? 'checked="checked"' : '') + '/>' +
+                        '<input type="checkbox" class="ace" onclick="return false;" />' +
                         '<span class="lbl"></span>' +
                         '</label>' +
                         '</td>' +
@@ -198,21 +30,17 @@
                         '<td>' + (object.received_at || 'N/A') + '</td>' +
                         '<td>' + (object.confirmed_at || 'N/A') + '</td>' +
                         '<td>' + (object.forwarded_at || 'N/A') + '</td>' +
-                        '<td>' + sStatus.toUpperCase() + '</td>' +
+                        '<td>' + (oPost.status) + '</td>' +
                         '</tr>';
-
-                    sRecipient += '<li data-step="1" class="' + sStatus + '" title="' + sStatus.toUpperCase() + '">' +
-                                    '<span class="step">' + (index + 1) + '</span>' +
-                                    '<span class="title">' + object.user.name + '</span>' +
-                                  '</li>'
                 });
+
             }
             $('#simple-table').find('tbody').empty().append(sTable);
             $('#modal-wizard').find('.modal-header').html('<h4>' + oPost.title.toUpperCase() + '</h4>');
-            $('.steps').empty().append(sRecipient);
         };
 
         $('#dynamic-table').on('click', '.btnView', function () {
+            $('#modal-wizard').fadeToggle('slow', 'linear').modal('show');
             var sId = $(this).closest('tr').attr('id');
             $.ajax({
                 method: 'GET',
@@ -220,27 +48,21 @@
                 dataType: 'json'
             }).done(function (response) {
                 generateRecipientTableData(response);
-                $('#modal-wizard').fadeToggle('slow', 'linear').modal('show');
             });
         });
 
         $('#dynamic-table').on('click', '.btnDelete', function () {
-            var self = this;
             var sId = $(this).closest('tr').attr('id');
-            var oSelectedTr = $(self).closest('tr');
-            var oData = $('#dynamic-table').DataTable().row(oSelectedTr).data();
-            oData[2] = 'new Description';
-            $('#dynamic-table').DataTable().row(oSelectedTr).data(oData);
-            $("#dialog-confirm").removeClass('hide').dialog({
+            $( "#dialog-confirm" ).removeClass('hide').dialog({
                 resizable: false,
                 width: '320',
                 modal: true,
                 buttons: [
                     {
                         html: "<i class='ace-icon fa fa-trash-o bigger-110'></i>&nbsp; Delete all items",
-                        "class": "btn btn-danger btn-minier",
-                        click: function () {
-                            $(this).dialog("close");
+                        "class" : "btn btn-danger btn-minier",
+                        click: function() {
+                            $( this ).dialog( "close" );
                             $.ajax({
                                 headers: {
                                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -250,22 +72,22 @@
                                 dataType: 'json'
                             }).done(function (response) {
                                 if (response === true) {
-                                    oSelectedTr.remove();
-                                    $('#dynamic-table').DataTable().row(oSelectedTr).remove().draw();
+                                    alert('deleted');
+                                    location.reload();
                                 }
                             });
                         }
                     },
                     {
                         html: "<i class='ace-icon fa fa-times bigger-110'></i>&nbsp; Cancel",
-                        "class": "btn btn-minier",
-                        click: function () {
-                            $(this).dialog("close");
+                        "class" : "btn btn-minier",
+                        click: function() {
+                            $( this ).dialog( "close" );
                         }
                     }
                 ]
             });
-        });
+        });*/
 
         jQuery(function ($) {
             var myTable =
@@ -274,7 +96,7 @@
                         bAutoWidth: false,
                         "aoColumns": [
                             {"bSortable": false},
-                            null, null, null, null, null, null, null,
+                            null, null, null, null, null, null,
                             {"bSortable": false}
                         ],
                         "aaSorting": [],
@@ -437,11 +259,9 @@
             });
             /***************/
         });
-
-        $('.steps li').tooltip();
     </script>
 @endsection
 
 @section('page-level-style')
-    <link rel="stylesheet" href="{{ asset('assets/css/jquery-ui.min.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('assets/css/jquery-ui.min.css') }}" />
 @endsection

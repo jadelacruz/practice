@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Recipient;
 
 class RecipientController extends Controller
@@ -41,12 +42,12 @@ class RecipientController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  $id
-     * @return \Illuminate\Http\Response
+     * @param  $recipient
+     * @return Recipient
      */
-    public function show($id)
+    public function show(Recipient $recipient)
     {
-        return Recipient::where('id', '=', $id)->with('user')->first();
+        return $recipient;
     }
 
     /**
@@ -83,8 +84,8 @@ class RecipientController extends Controller
         //
     }
 
-    public function getPostRecipients($id)
+    public function get()
     {
-
+        return Recipient::all();
     }
 }
