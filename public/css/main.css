@@ -53,3 +53,15 @@
     background-color: #b368c3;
     color: #000;
 }
+
+.modal-width-90 {
+    width: 90%;
+}
+
+.td-width-1 {
+    width: 1%;
+}
+
+.unseen {
+    background-color: #eee;
+}

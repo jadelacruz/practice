@@ -15,8 +15,9 @@ class PostController extends Controller
      * @var array
      */
     private $aInject = array(
-        'sPage' => 'post',
-        'sSub' => '',
+        'sPage'  => 'post',
+        'sSub'   => '',
+        'aAlert' => ['type' => '', 'msg' => '']
     );
 
     /**
@@ -86,7 +87,10 @@ class PostController extends Controller
             ]);
         }
 
-        return redirect()->route('post.create');
+        $this->aInject['sSub'] = 'create';
+        $this->aInject['aRecipient'] = User::where('id', '!=', Auth::user()->id)->get();
+        $this->aInject['aAlert'] = ['type' => 'success', 'msg' => 'Success adding new data!'];
+        return view('post.create', $this->aInject);
     }
 
     /**

@@ -31,9 +31,11 @@
                 <th>Title</th>
                 <th>Description</th>
                 <th>No. of Recipient/s</th>
+                @if (Auth::user()->isAdmin())
                 <th>No. of Notified Recipient/s</th>
                 <th>No. of Received Recipient/s</th>
                 <th>No. of Confirmed Recipient/s</th>
+                @endif
                 <th>Status</th>
                 <th></th>
             </tr>
@@ -54,13 +56,13 @@
                     <td>{{ $oPost->description }}</td>
 
                     <td>{{ count($oPost->recipient) }}</td>
-
+                    @if (Auth::user()->isAdmin())
                     <td>{{ count($oPost->recipient()->viewed()->get()) }}</td>
 
                     <td>{{ count($oPost->recipient()->received()->get()) }}</td>
 
                     <td>{{ count($oPost->recipient()->confirmed()->get()) }}</td>
-
+                    @endif
                     <td>
                         <span class="label label-sm label-{{ ($oPost->status === 'pending') ? 'warning' : 'success'}}">{{ strtoupper($oPost->status) }}</span>
                     </td>
@@ -142,7 +144,7 @@
                 modal: true,
                 buttons: [
                     {
-                        html: "<i class='ace-icon fa fa-trash-o bigger-110'></i>&nbsp; Delete all items",
+                        html: "<i class='ace-icon fa fa-trash-o bigger-110'></i>&nbsp; Delete this item",
                         "class": "btn btn-danger btn-minier",
                         click: function () {
                             $(this).dialog("close");

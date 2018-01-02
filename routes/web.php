@@ -33,7 +33,12 @@ Route::delete('/post/{post}', 'PostController@destroy');
 
 Route::get('/recipient/userNotViewedNotification', 'RecipientController@getUserNotViewedNotification');
 
+Route::get('/recipient/userNewNotification', 'RecipientController@getUserNewNotification');
+
 Route::get('/recipient/viewed/{recipient}', 'RecipientController@viewed');
+Route::get('/recipient/received/{recipient}', 'RecipientController@received');
+Route::get('/recipient/confirmed/{recipient}', 'RecipientController@confirmed');
+Route::get('/recipient/forwarded/{recipient}', 'RecipientController@forwarded');
 
 Route::get('/recipient/{recipient}', 'RecipientController@show');
 

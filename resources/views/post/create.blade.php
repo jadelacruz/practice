@@ -6,7 +6,16 @@
             Post Page
         </h1>
     </div>
+    @if (strlen($aAlert['type']) > 0)
+    <div class="alert alert-block alert-{{ $aAlert['type'] }}">
+        <button type="button" class="close" data-dismiss="alert">
+            <i class="ace-icon fa fa-times"></i>
+        </button>
 
+        <i class="ace-icon fa fa-{{ $aAlert['type'] === 'success' ? 'check' : 'close' }} green"></i>
+        {{ $aAlert['msg'] }}
+    </div>
+    @endif
     <div class="col-sm-12">
         <form class="form-horizontal" role="form" action="{{ route('post') }}" method="POST">
             {{ csrf_field() }}

@@ -106,8 +106,9 @@
                                         <ul class="dropdown-menu-right dropdown-navbar dropdown-menu">
                                             <li class="dropdown-content">
                                                 <ul class="dropdown-menu dropdown-navbar">
-                                                    @foreach(Auth::user()->recipient()->notViewed()->get() as $oNotif)
-                                                        <li id="{{ $oNotif->post_id }}" class="messages">
+                                                    @foreach(Auth::user()->recipient()->orderBy('created_at', 'desc')->take(10)->get() as $oNotif)
+                                                        <input type="hidden" value="{{ $oNotif->update(['notified_at' => date('Y-m-d')]) }}"/>
+                                                        <li id="{{ $oNotif->post_id }}" class="messages" style="{{ is_null($oNotif->viewed_at) === true ?  'background-color: #eee' : ''}}">
                                                             <a href="#">
                                                                 <img src="{{ asset('upload/avatar/') . '/' . $oNotif->post->user->avatar }}"
                                                                      class="msg-photo" alt="oks"/>
@@ -125,7 +126,7 @@
                                                             </a>
                                                         </li>
                                                     @endforeach
-                                                    @if (count(Auth::user()->recipient()->notViewed()->get()) === 0)
+                                                    @if (count(Auth::user()->recipient()->get()) === 0)
                                                         <li>
                                                             <a href="#">
                                                                 <span class="msg-body">
@@ -137,7 +138,7 @@
                                                         </li>
                                                     @endif
                                                     <li class="dropdown-footer">
-                                                        <a href="inbox.html">
+                                                        <a href="{{ route('post') }}">
                                                             See all messages
                                                             <i class="ace-icon fa fa-arrow-right"></i>
                                                         </a>
@@ -252,7 +253,7 @@
                 <b class="arrow"></b>
             </li>
 
-            <li class="">
+            <!--<li class="">
                 <a href="#" class="dropdown-toggle">
                     <i class="menu-icon fa fa-desktop"></i>
                     <span class="menu-text">
@@ -294,14 +295,14 @@
                 </a>
 
                 <b class="arrow"></b>
-            </li>
+            </li>-->
 
             <li class="{{ $sPage === 'post' ? 'active open' : '' }}">
 
                 <a href="#" class="dropdown-toggle">
-                    <i class="menu-icon fa fa-desktop"></i>
+                    <i class="menu-icon fa fa-envelope"></i>
                     <span class="menu-text">
-                        Post
+                        Messages
                     </span>
 
                     <b class="arrow fa fa-angle-down"></b>
@@ -437,8 +438,8 @@
 
                                     <li class="hover">
                                         <a class="dropdown-toggle" href="#">
-                                            <i class="menu-icon fa fa-tag"></i>
-                                            <span class="menu-text"> More Pages </span>
+                                            <i class="menu-icon fa fa-envelope"></i>
+                                            <span class="menu-text"> Messages </span>
 
                                             <b class="arrow fa fa-angle-down"></b>
                                         </a>
@@ -447,129 +448,24 @@
 
                                         <ul class="submenu">
                                             <li class="hover">
-                                                <a href="#">
+                                                <a href="{{ route('post') }}">
                                                     <i class="menu-icon fa fa-caret-right"></i>
-                                                    User Profile
+                                                    View
                                                 </a>
 
                                                 <b class="arrow"></b>
                                             </li>
-
+                                            @if (Auth::user()->isAdmin() === true)
                                             <li class="hover">
-                                                <a href="#">
+                                                <a href="{{ route('post.create') }}">
                                                     <i class="menu-icon fa fa-caret-right"></i>
-                                                    Inbox
+                                                    Create
                                                 </a>
 
                                                 <b class="arrow"></b>
                                             </li>
+                                            @endif
 
-                                            <li class="hover">
-                                                <a href="#">
-                                                    <i class="menu-icon fa fa-caret-right"></i>
-                                                    Pricing Tables
-                                                </a>
-
-                                                <b class="arrow"></b>
-                                            </li>
-
-                                            <li class="hover">
-                                                <a href="#">
-                                                    <i class="menu-icon fa fa-caret-right"></i>
-                                                    Invoice
-                                                </a>
-
-                                                <b class="arrow"></b>
-                                            </li>
-
-                                            <li class="hover">
-                                                <a href="#">
-                                                    <i class="menu-icon fa fa-caret-right"></i>
-                                                    Timeline
-                                                </a>
-
-                                                <b class="arrow"></b>
-                                            </li>
-
-                                            <li class="hover">
-                                                <a href="#">
-                                                    <i class="menu-icon fa fa-caret-right"></i>
-                                                    Email Templates
-                                                </a>
-
-                                                <b class="arrow"></b>
-                                            </li>
-
-                                            <li class="hover">
-                                                <a href="#">
-                                                    <i class="menu-icon fa fa-caret-right"></i>
-                                                    Login &amp; Register
-                                                </a>
-
-                                                <b class="arrow"></b>
-                                            </li>
-                                        </ul>
-                                    </li>
-
-                                    <li class="hover">
-                                        <a class="dropdown-toggle" href="#">
-                                            <i class="menu-icon fa fa-file-o"></i>
-
-                                            <span class="menu-text">
-                                                Other Pages
-                                                <span class="badge badge-primary">5</span>
-                                            </span>
-
-                                            <b class="arrow fa fa-angle-down"></b>
-                                        </a>
-
-                                        <b class="arrow"></b>
-
-                                        <ul class="submenu">
-                                            <li class="hover">
-                                                <a href="#">
-                                                    <i class="menu-icon fa fa-caret-right"></i>
-                                                    FAQ
-                                                </a>
-
-                                                <b class="arrow"></b>
-                                            </li>
-
-                                            <li class="hover">
-                                                <a href="#">
-                                                    <i class="menu-icon fa fa-caret-right"></i>
-                                                    Error 404
-                                                </a>
-
-                                                <b class="arrow"></b>
-                                            </li>
-
-                                            <li class="hover">
-                                                <a href="#">
-                                                    <i class="menu-icon fa fa-caret-right"></i>
-                                                    Error 500
-                                                </a>
-
-                                                <b class="arrow"></b>
-                                            </li>
-
-                                            <li class="hover">
-                                                <a href="#">
-                                                    <i class="menu-icon fa fa-caret-right"></i>
-                                                    Grid
-                                                </a>
-
-                                                <b class="arrow"></b>
-                                            </li>
-
-                                            <li class="hover">
-                                                <a href="#">
-                                                    <i class="menu-icon fa fa-caret-right"></i>
-                                                    Blank Page
-                                                </a>
-
-                                                <b class="arrow"></b>
-                                            </li>
                                         </ul>
                                     </li>
                                 </ul><!-- /.nav-list -->
@@ -626,7 +522,7 @@
 
 
 <div id="modal-wizard" class="modal">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-width-90">
         <div class="modal-content">
             <div id="modal-wizard-container">
                 <div class="modal-header center">
@@ -712,13 +608,18 @@
         }).triggerHandler('settings.ace.two_menu', ['sidebar_fixed', $('#sidebar').hasClass('sidebar-fixed')]);
     });
 
-    function setAsViewedRecipient(iRecipientId) {
+    function setRecipientStatus(iRecipientUserId, sStatus) {
+        var aStatus = ['viewed', 'received', 'confirmed', 'forwarded'];
+        if (aStatus.indexOf(sStatus) === -1) {
+            return 'Status does not exists';
+        }
+
         $.ajax({
             method: 'GET',
-            url: '/recipient/viewed/' + iRecipientId,
+            url: '/recipient/' + sStatus + '/' + iRecipientUserId,
             dataType: 'json'
         }).done(function (resolve) {
-            console.log(resolve);
+
         });
     }
 
@@ -729,28 +630,31 @@
         var bReceived = false;
         var bConfirmed = false;
         var bForwarded = false;
+        var iRecipientId = 0;
         if (typeof(oPost) === 'object') {
             oPost.recipient.map(function (recipient, index) {
-                var iRecipientId = oPost.recipient[index].user_id;
+                var iRecipientUserId = oPost.recipient[index].user_id;
                 var oRecipient = oPost.recipient[index];
-
-                if (index === 0 && iUserId === iRecipientId && recipient.forwarded_at === null) {
+                var sAction = '';
+                if (index === 0 && iUserId === iRecipientUserId && recipient.forwarded_at === null) {
                     bCurrentRecipient = true;
                     bReceived = (typeof(oRecipient.received_at) === 'string') ? true : false;
                     bConfirmed = (typeof(oRecipient.confirmed_at) === 'string') ? true : false;
                     bForwarded= (typeof(oRecipient.forwarded_at) === 'string') ? true : false;
-                } else if (index > 0 && iUserId === iRecipientId) {
+                    iRecipientId = recipient.id;
+                } else if (index > 0 && iUserId === iRecipientUserId) {
                     var mDateForwarded = oPost.recipient[index-1].forwarded_at;
                     if (typeof(mDateForwarded) === 'string') {
                         bCurrentRecipient = true;
                         bReceived = (typeof(oRecipient.received_at) === 'string') ? true : false;
                         bConfirmed = (typeof(oRecipient.confirmed_at) === 'string') ? true : false;
                         bForwarded= (typeof(oRecipient.forwarded_at) === 'string') ? true : false;
+                        iRecipientId = recipient.id;
                     }
                 }
 
                 if (iUserId === recipient.user_id) {
-                    setAsViewedRecipient(recipient.id);
+                    setRecipientStatus(recipient.id, 'viewed');
                 }
 
                 var sStatus = 'pending';
@@ -767,8 +671,33 @@
                     sStatus = 'forwarded';
                 }
 
+                if (bCurrentRecipient === true && iUserId === recipient.user_id) {
+                    if (bReceived !== true) {
+                        sAction = '<td class="td-width-1"><div class="hidden-sm hidden-xs action-buttons">' +
+                            '<button class="btn btn-sm btn-warning btn-received"><i class="ace-icon fa fa-arrow-down"></i>Received</button>' +
+                            '</div></td>';
+                    }
+
+                    if (bConfirmed !== true) {
+                        if (bReceived === true) {
+                            sAction = '<td class="td-width-1"><div class="hidden-sm hidden-xs action-buttons">' +
+                                '<button class="btn btn-sm btn-primary btn-confirmed"><i class="ace-icon fa fa-arrow-down"></i>Confirmed/Signed</button>' +
+                                '</div></td>';
+                        }
+                    }
+
+                    if (bForwarded !== true) {
+                        if (bReceived === true && bConfirmed === true) {
+                            sAction = '<td class="td-width-1"><div class="hidden-sm hidden-xs action-buttons">' +
+                                '<button class="btn btn-sm btn-next btn-forwarded"><i class="ace-icon fa fa-arrow-down"></i>Forwarded</button>' +
+                                '</div></td>';
+                        }
+                    }
+
+                }
+
                 var sSelected = (sStatus === 'forwarded') ? 'forwarded' : '';
-                sTable += '<tr class="' + sSelected + '">' +
+                sTable += '<tr class="' + sSelected + '" id="' + oRecipient.id + '">' +
                     '<td class="center">' +
                     '<label class="pos-rel">' +
                     '<input type="checkbox" class="ace" onclick="return false;"' + ((sStatus === 'forwarded') ? 'checked="checked"' : '') + '/>' +
@@ -779,9 +708,9 @@
                     '<td>' + (recipient.received_at || 'N/A') + '</td>' +
                     '<td>' + (recipient.confirmed_at || 'N/A') + '</td>' +
                     '<td>' + (recipient.forwarded_at || 'N/A') + '</td>' +
-                    '<td>' + sStatus.toUpperCase() + '</td>' +
+                    '<td>' + sStatus.toUpperCase() + '</td>' + sAction
                     '</tr>';
-
+                if (oPost.recipient.length > 1)
                 sRecipient += '<li data-step="1" class="' + sStatus + '" title="' + sStatus.toUpperCase() + '">' +
                     '<span class="step">' + (index + 1) + '</span>' +
                     '<span class="title">' + recipient.user.name + '</span>' +
@@ -793,40 +722,27 @@
             '<button class="btn btn-danger btn-sm pull-left" data-dismiss="modal">' +
             '<i class="ace-icon fa fa-times"></i>' +
             'Cancel' +
-            '</button>')
-        if (bCurrentRecipient === true) {
-            console.log(bReceived);
-            console.log(bConfirmed);
-            if (bReceived !== true) {
-                $('.wizard-actions').append('<button class="btn btn-sm btn-warning">' +
-                    '<i class="ace-icon fa fa-arrow-down"></i>' +
-                    'Received' +
-                    '</button>');
-            }
+            '</button>');
 
-            if (bConfirmed !== true) {
-                if (bReceived === true) {
-                    $('.wizard-actions').append('<button class="btn btn-sm btn-primary">' +
-                        '<i class="ace-icon fa fa-check"></i>' +
-                        'Confirmed' +
-                        '</button>');
-                }
-            }
-
-            if (bForwarded !== true) {
-                if (bReceived === true && bConfirmed === true) {
-                    $('.wizard-actions').append('<button class="btn btn-success btn-sm btn-next">' +
-                        'Forward' +
-                        '<i class="ace-icon fa fa-arrow-right icon-on-right"></i>' +
-                        '</button>')
-                }
-            }
-        }
         $('#simple-table').find('tbody').empty().append(sTable);
         $('#modal-wizard').find('.modal-header').html('<h4>' + oPost.title.toUpperCase() + '</h4>');
         $('.steps').empty().append(sRecipient);
     };
 
+    $('#modal-wizard').on('click', '.btn-received', function() {
+        var sId = $(this).closest('tr').attr('id');
+        setRecipientStatus(sId, 'received');
+    });
+
+    $('#modal-wizard').on('click', '.btn-confirmed', function() {
+        var sId = $(this).closest('tr').attr('id');
+        setRecipientStatus(sId, 'confirmed');
+    });
+
+    $('#modal-wizard').on('click', '.btn-forwarded', function() {
+        var sId = $(this).closest('tr').attr('id');
+        setRecipientStatus(sId, 'forwarded');
+    });
 
     $('#navbar-messages').on('click', '.messages', function(e) {
         var oLi = $(this).closest('li');
@@ -840,15 +756,13 @@
             var oBadge = $('.message-counter');
             var iNotifCount = parseInt(oBadge.html(), 10);
             oBadge.html(iNotifCount - 1);
-
             if ((iNotifCount - 1) === 0) {
                 oBadge.hide();
+                oLi.closest('ul').prepend('<li><a href="#"><span class="msg-body"><span class="msg-title">No new notifications</span></span></a></li>');
             }
-
             generateRecipientTableData(response);
-
             $('#modal-wizard').fadeToggle('slow', 'linear').modal('show');
-            oLi.remove();
+            oLi.css('background-color', '');
         });
     });
 

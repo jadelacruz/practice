@@ -21,6 +21,11 @@ class Recipient extends Model
         return $this->belongsTo(\App\User::class);
     }
 
+    public function scopeNotNotified($query)
+    {
+        return $query->whereNull('notified_at');
+    }
+
     public function scopeNotViewed($query)
     {
         return $query->whereNull('viewed_at');

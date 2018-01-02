@@ -94,9 +94,40 @@ class RecipientController extends Controller
         return $oNotif;
     }
 
+    public function getUserNewNotification()
+    {
+        $oNotif = Auth::user()->recipient()->with('post')->notNotified()->orderBy('created_at')->get();
+        foreach($oNotif as $oRow) {
+            $oRow->notified_at = date('Y-m-d');
+            $oRow->save();
+        }
+        return $oNotif;
+    }
+
     public function viewed(Recipient $recipient)
     {
         $recipient->viewed_at = date('Y-m-d');
+        $mResult = $recipient->save();
+        return (string)$mResult;
+    }
+
+    public function received(Recipient $recipient)
+    {
+        $recipient->received_at = date('Y-m-d');
+        $mResult = $recipient->save();
+        return (string)$mResult;
+    }
+
+    public function confirmed(Recipient $recipient)
+    {
+        $recipient->confirmed_at = date('Y-m-d');
+        $mResult = $recipient->save();
+        return (string)$mResult;
+    }
+
+    public function forwarded(Recipient $recipient)
+    {
+        $recipient->forwarded_at = date('Y-m-d');
         $mResult = $recipient->save();
         return (string)$mResult;
     }
