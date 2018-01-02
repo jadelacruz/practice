@@ -17,6 +17,7 @@ class CreateRecipientsTable extends Migration
             $table->increments('id');
             $table->integer('post_id');
             $table->integer('user_id');
+            $table->date('notified_at')->nullable();
             $table->date('viewed_at')->nullable();
             $table->date('received_at')->nullable();
             $table->date('confirmed_at')->nullable();

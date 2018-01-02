@@ -15,7 +15,7 @@ class RecipientController extends Controller
      */
     public function index()
     {
-        //
+        //return Recipient::all();
     }
 
     /**
@@ -84,8 +84,20 @@ class RecipientController extends Controller
         //
     }
 
-    public function get()
+    public function getUserNotViewedNotification()
     {
-        return Recipient::all();
+        $oNotif = Auth::user()->recipient()->with('post')->notViewed()->orderBy('created_at', 'desc')->take(5)->get();
+        foreach ($oNotif as $oRow) {
+            $oRow->notified_at = date('Y-m-d');
+            $oRow->save();
+        }
+        return $oNotif;
+    }
+
+    public function viewed(Recipient $recipient)
+    {
+        $recipient->viewed_at = date('Y-m-d');
+        $mResult = $recipient->save();
+        return (string)$mResult;
     }
 }

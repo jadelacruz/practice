@@ -16,7 +16,7 @@
     <!-- page specific plugin styles -->
     @yield('page-level-style')
 
-<!-- text fonts -->
+    <!-- text fonts -->
     <link rel="stylesheet" href="{{ asset('assets/css/fonts.googleapis.com.css') }}"/>
     <!-- ace styles -->
     <link rel="stylesheet" href="{{ asset('assets/css/ace.min.css') }}" class="ace-main-stylesheet"
@@ -47,6 +47,7 @@
 </head>
 
 <body class="no-skin">
+    <input id="user_id" type="hidden" value="{{ Auth::user()->id }}" />
 <div id="navbar" class="navbar navbar-default    navbar-collapse       ace-save-state">
     <div class="navbar-container ace-save-state" id="navbar-container">
         <button type="button" class="navbar-toggle menu-toggler pull-left" id="menu-toggler" data-target="#sidebar">
@@ -79,60 +80,76 @@
         <div class="navbar-buttons navbar-header pull-right  collapse navbar-collapse" role="navigation">
             <ul class="nav ace-nav">
                 @if (Auth::user()->isAdmin() === false)
-                <li class="purple dropdown-modal">
-                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                        <i class="ace-icon fa fa-bell icon-animated-bell"></i>
-                        <span class="badge badge-danger">{{ count(Auth::user()->recipient()->notViewed()->get()) }}</span>
-                    </a>
+                    <li class="purple dropdown-modal">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                            <i class="ace-icon fa fa-bell icon-animated-bell"></i>
+                            @if (count(Auth::user()->recipient()->notViewed()->get()) > 0)
+                                <span class="badge badge-danger message-counter">{{ count(Auth::user()->recipient()->notViewed()->get()) }}</span>
+                            @endif
+                        </a>
 
-                    <div class="dropdown-menu-right dropdown-navbar dropdown-menu dropdown-caret dropdown-close">
-                        <div class="tabbable">
-                            <ul class="nav nav-tabs">
-                                <li class="active">
-                                    <a data-toggle="tab" href="#navbar-messages">
-                                        Messages
-                                        <span class="badge badge-danger">{{ count(Auth::user()->recipient()->notViewed()->get()) }}</span>
-                                    </a>
-                                </li>
-                            </ul><!-- .nav-tabs -->
+                        <div class="dropdown-menu-right dropdown-navbar dropdown-menu dropdown-caret dropdown-close">
+                            <div class="tabbable">
+                                <ul class="nav nav-tabs">
+                                    <li class="active">
+                                        <a data-toggle="tab" href="#navbar-messages">
+                                            Messages
+                                            @if (count(Auth::user()->recipient()->notViewed()->get()) > 0)
+                                                <span class="badge badge-danger message-counter">{{ count(Auth::user()->recipient()->notViewed()->get()) }}</span>
+                                            @endif
+                                        </a>
+                                    </li>
+                                </ul><!-- .nav-tabs -->
 
-                            <div class="tab-content">
-                                <div id="navbar-messages" class="tab-pane in active">
-                                    <ul class="dropdown-menu-right dropdown-navbar dropdown-menu">
-                                        <li class="dropdown-content">
-                                            <ul class="dropdown-menu dropdown-navbar">
-                                            @foreach(Auth::user()->recipient()->notViewed()->get() as $oNotif)
-                                                <li>
-                                                    <a href="#">
-                                                        <img src="{{ asset('upload/avatar/') . '/' . $oNotif->post->user->avatar }}" class="msg-photo" alt="oks" />
-                                                        <span class="msg-body">
-                                                            <span class="msg-title">
-                                                                <span class="blue">{{ strtoupper($oNotif->post->user->name) }}</span>
-                                                                {{ $oNotif->post->title }}
-                                                            </span>
+                                <div class="tab-content">
+                                    <div id="navbar-messages" class="tab-pane in active">
+                                        <ul class="dropdown-menu-right dropdown-navbar dropdown-menu">
+                                            <li class="dropdown-content">
+                                                <ul class="dropdown-menu dropdown-navbar">
+                                                    @foreach(Auth::user()->recipient()->notViewed()->get() as $oNotif)
+                                                        <li id="{{ $oNotif->post_id }}" class="messages">
+                                                            <a href="#">
+                                                                <img src="{{ asset('upload/avatar/') . '/' . $oNotif->post->user->avatar }}"
+                                                                     class="msg-photo" alt="oks"/>
+                                                                <span class="msg-body">
+                                                                    <span class="msg-title">
+                                                                        <span class="blue">{{ strtoupper($oNotif->post->user->name) }}</span>
+                                                                        {{ $oNotif->post->title }}
+                                                                    </span>
 
-                                                            <span class="msg-time">
-                                                                <i class="ace-icon fa fa-clock-o"></i>
-                                                                <span>{{ $oNotif->created_at->diffForHumans() }}</span>
-                                                            </span>
-                                                        </span>
-                                                    </a>
-                                                </li>
-                                            @endforeach
-                                                <li class="dropdown-footer">
-                                                    <a href="inbox.html">
-                                                        See all messages
-                                                        <i class="ace-icon fa fa-arrow-right"></i>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </div><!-- /.tab-pane -->
-                            </div><!-- /.tab-content -->
-                        </div><!-- /.tabbable -->
-                    </div><!-- /.dropdown-menu -->
-                </li>
+                                                                    <span class="msg-time">
+                                                                        <i class="ace-icon fa fa-clock-o"></i>
+                                                                        <span>{{ $oNotif->created_at->diffForHumans() }}</span>
+                                                                    </span>
+                                                                </span>
+                                                            </a>
+                                                        </li>
+                                                    @endforeach
+                                                    @if (count(Auth::user()->recipient()->notViewed()->get()) === 0)
+                                                        <li>
+                                                            <a href="#">
+                                                                <span class="msg-body">
+                                                                    <span class="msg-title">
+                                                                        No new notifications
+                                                                    </span>
+                                                                </span>
+                                                            </a>
+                                                        </li>
+                                                    @endif
+                                                    <li class="dropdown-footer">
+                                                        <a href="inbox.html">
+                                                            See all messages
+                                                            <i class="ace-icon fa fa-arrow-right"></i>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </div><!-- /.tab-pane -->
+                                </div><!-- /.tab-content -->
+                            </div><!-- /.tabbable -->
+                        </div><!-- /.dropdown-menu -->
+                    </li>
                 @endif
 
                 <li class="light-blue dropdown-modal">
@@ -279,36 +296,36 @@
                 <b class="arrow"></b>
             </li>
 
-                <li class="{{ $sPage === 'post' ? 'active open' : '' }}">
+            <li class="{{ $sPage === 'post' ? 'active open' : '' }}">
 
-                    <a href="#" class="dropdown-toggle">
-                        <i class="menu-icon fa fa-desktop"></i>
-                        <span class="menu-text">
+                <a href="#" class="dropdown-toggle">
+                    <i class="menu-icon fa fa-desktop"></i>
+                    <span class="menu-text">
                         Post
                     </span>
 
-                        <b class="arrow fa fa-angle-down"></b>
-                    </a>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
 
-                    <b class="arrow"></b>
+                <b class="arrow"></b>
 
-                    <ul class="submenu">
-                        <li class="{{ $sSub === 'view' ? 'active' : '' }}">
-                            <a href="{{ route('post') }}">
-                                View
-                            </a>
-                            <b class="arrow"></b>
-                        </li>
-                        @if (Auth::user()->isAdmin())
+                <ul class="submenu">
+                    <li class="{{ $sSub === 'view' ? 'active' : '' }}">
+                        <a href="{{ route('post') }}">
+                            View
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                    @if (Auth::user()->isAdmin())
                         <li class="{{ $sSub === 'create' ? 'active' : '' }}">
                             <a href="{{ route('post.create') }}">
                                 Create
                             </a>
                             <b class="arrow"></b>
                         </li>
-                        @endif
-                    </ul>
-                </li>
+                    @endif
+                </ul>
+            </li>
 
         </ul><!-- /.nav-list -->
 
@@ -571,6 +588,8 @@
         </div>
     </div><!-- /.main-content -->
 
+
+
     <div class="footer">
         <div class="footer-inner">
             <div class="footer-content">
@@ -604,6 +623,47 @@
     </a>
 </div><!-- /.main-container -->
 
+
+
+<div id="modal-wizard" class="modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id="modal-wizard-container">
+                <div class="modal-header center">
+
+                </div>
+
+                <div class="modal-body">
+                    <ul class="steps">
+
+                    </ul>
+                    <hr/>
+                    <table id="simple-table" class="table  table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th class="center">&nbsp;</th>
+                            <th>Recipient Name</th>
+                            <th>Received Date</th>
+                            <th>Confirmation Date</th>
+                            <th class="hidden-480">Date Forwarded</th>
+                            <th>Status</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+            <div class="modal-footer wizard-actions">
+
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- basic scripts -->
 
 <!--[if !IE]> -->
@@ -625,12 +685,13 @@
 <script src="{{ asset('assets/js/ace-elements.min.js') }}"></script>
 <script src="{{ asset('assets/js/ace.min.js') }}"></script>
 
-
 <!-- Page Level Script -->
 @yield('page-level-script')
 
 <!-- inline scripts related to this page -->
 <script type="text/javascript">
+    var iUserId = parseInt($('#user_id').val(), 10);
+
     jQuery(function ($) {
         $('#sidebar2').insertBefore('.page-content');
 
@@ -650,37 +711,178 @@
             }
         }).triggerHandler('settings.ace.two_menu', ['sidebar_fixed', $('#sidebar').hasClass('sidebar-fixed')]);
     });
+
+    function setAsViewedRecipient(iRecipientId) {
+        $.ajax({
+            method: 'GET',
+            url: '/recipient/viewed/' + iRecipientId,
+            dataType: 'json'
+        }).done(function (resolve) {
+            console.log(resolve);
+        });
+    }
+
+    function generateRecipientTableData(oPost) {
+        var sTable = '';
+        var sRecipient = '';
+        var bCurrentRecipient = false;
+        var bReceived = false;
+        var bConfirmed = false;
+        var bForwarded = false;
+        if (typeof(oPost) === 'object') {
+            oPost.recipient.map(function (recipient, index) {
+                var iRecipientId = oPost.recipient[index].user_id;
+                var oRecipient = oPost.recipient[index];
+
+                if (index === 0 && iUserId === iRecipientId && recipient.forwarded_at === null) {
+                    bCurrentRecipient = true;
+                    bReceived = (typeof(oRecipient.received_at) === 'string') ? true : false;
+                    bConfirmed = (typeof(oRecipient.confirmed_at) === 'string') ? true : false;
+                    bForwarded= (typeof(oRecipient.forwarded_at) === 'string') ? true : false;
+                } else if (index > 0 && iUserId === iRecipientId) {
+                    var mDateForwarded = oPost.recipient[index-1].forwarded_at;
+                    if (typeof(mDateForwarded) === 'string') {
+                        bCurrentRecipient = true;
+                        bReceived = (typeof(oRecipient.received_at) === 'string') ? true : false;
+                        bConfirmed = (typeof(oRecipient.confirmed_at) === 'string') ? true : false;
+                        bForwarded= (typeof(oRecipient.forwarded_at) === 'string') ? true : false;
+                    }
+                }
+
+                if (iUserId === recipient.user_id) {
+                    setAsViewedRecipient(recipient.id);
+                }
+
+                var sStatus = 'pending';
+
+                if (recipient.received_at !== null) {
+                    sStatus = 'received';
+                }
+
+                if (recipient.confirmed_at !== null) {
+                    sStatus = 'confirmed';
+                }
+
+                if (recipient.forwarded_at !== null) {
+                    sStatus = 'forwarded';
+                }
+
+                var sSelected = (sStatus === 'forwarded') ? 'forwarded' : '';
+                sTable += '<tr class="' + sSelected + '">' +
+                    '<td class="center">' +
+                    '<label class="pos-rel">' +
+                    '<input type="checkbox" class="ace" onclick="return false;"' + ((sStatus === 'forwarded') ? 'checked="checked"' : '') + '/>' +
+                    '<span class="lbl"></span>' +
+                    '</label>' +
+                    '</td>' +
+                    '<td>' + recipient.user.name + '</td>' +
+                    '<td>' + (recipient.received_at || 'N/A') + '</td>' +
+                    '<td>' + (recipient.confirmed_at || 'N/A') + '</td>' +
+                    '<td>' + (recipient.forwarded_at || 'N/A') + '</td>' +
+                    '<td>' + sStatus.toUpperCase() + '</td>' +
+                    '</tr>';
+
+                sRecipient += '<li data-step="1" class="' + sStatus + '" title="' + sStatus.toUpperCase() + '">' +
+                    '<span class="step">' + (index + 1) + '</span>' +
+                    '<span class="title">' + recipient.user.name + '</span>' +
+                    '</li>'
+            });
+        }
+
+        $('.wizard-actions').empty().append('' +
+            '<button class="btn btn-danger btn-sm pull-left" data-dismiss="modal">' +
+            '<i class="ace-icon fa fa-times"></i>' +
+            'Cancel' +
+            '</button>')
+        if (bCurrentRecipient === true) {
+            console.log(bReceived);
+            console.log(bConfirmed);
+            if (bReceived !== true) {
+                $('.wizard-actions').append('<button class="btn btn-sm btn-warning">' +
+                    '<i class="ace-icon fa fa-arrow-down"></i>' +
+                    'Received' +
+                    '</button>');
+            }
+
+            if (bConfirmed !== true) {
+                if (bReceived === true) {
+                    $('.wizard-actions').append('<button class="btn btn-sm btn-primary">' +
+                        '<i class="ace-icon fa fa-check"></i>' +
+                        'Confirmed' +
+                        '</button>');
+                }
+            }
+
+            if (bForwarded !== true) {
+                if (bReceived === true && bConfirmed === true) {
+                    $('.wizard-actions').append('<button class="btn btn-success btn-sm btn-next">' +
+                        'Forward' +
+                        '<i class="ace-icon fa fa-arrow-right icon-on-right"></i>' +
+                        '</button>')
+                }
+            }
+        }
+        $('#simple-table').find('tbody').empty().append(sTable);
+        $('#modal-wizard').find('.modal-header').html('<h4>' + oPost.title.toUpperCase() + '</h4>');
+        $('.steps').empty().append(sRecipient);
+    };
+
+
+    $('#navbar-messages').on('click', '.messages', function(e) {
+        var oLi = $(this).closest('li');
+
+        var sId = oLi.attr('id');
+        $.ajax({
+            method: 'GET',
+            url: '/post/recipient/' + sId,
+            dataType: 'json'
+        }).done(function (response) {
+            var oBadge = $('.message-counter');
+            var iNotifCount = parseInt(oBadge.html(), 10);
+            oBadge.html(iNotifCount - 1);
+
+            if ((iNotifCount - 1) === 0) {
+                oBadge.hide();
+            }
+
+            generateRecipientTableData(response);
+
+            $('#modal-wizard').fadeToggle('slow', 'linear').modal('show');
+            oLi.remove();
+        });
+    });
+
     $('#logout').click(function () {
-        console.log('clicked');
         $('#logout-form').submit();
     });
 
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            method: 'GET',
-            url: '/recipient/getUserNotif',
-            dataType: 'json'
-        }).done(function (response) {
-            console.log(response)
-        });
+    $.ajax({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        method: 'GET',
+        url: '/recipient/userNotViewedNotification',
+        dataType: 'json'
+    }).done(function (response) {
+        if (response.length === 1) {
+            showNotification('my title', 'my body', '/upload/avatar/' + response[0]['post']['user']['avatar']);
+        }
+    });
 
-    function showNotification(sTitle, sBody, sIcon, iTimeOut ) {
-        iTimeOut = iTimeOut || 7000;
-        if(window.Notification && Notification.permission !== "denied") {
-            Notification.requestPermission(function(status) {  // status is "granted", if accepted by user
+    function showNotification(sTitle, sBody, sIcon, iTimeOut) {
+        iTimeOut = iTimeOut || 3000;
+        if (window.Notification && Notification.permission !== "denied") {
+            Notification.requestPermission(function (status) {  // status is "granted", if accepted by user
                 var n = new Notification(sTitle, {
                     body: sBody,
                     icon: sIcon
                 });
-                setTimeout(function() {n.close()}, 7000)
+                setTimeout(function () {
+                    n.close()
+                }, iTimeOut)
             });
         }
     }
-
-    showNotification('myTitle', 'myBody', '/upload/avatar/default.png');
-
 </script>
 </body>
 </html>

@@ -31,8 +31,10 @@ Route::get('/post/{post}/edit', 'PostController@edit')->name('post.edit');
 
 Route::delete('/post/{post}', 'PostController@destroy');
 
-Route::get('/recipient/{recipient}', 'RecipientController@show');
+Route::get('/recipient/userNotViewedNotification', 'RecipientController@getUserNotViewedNotification');
 
-Route::get('/recipient/get', 'RecipientController@get');
+Route::get('/recipient/viewed/{recipient}', 'RecipientController@viewed');
+
+Route::get('/recipient/{recipient}', 'RecipientController@show');
 
 Auth::routes();

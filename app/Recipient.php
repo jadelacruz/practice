@@ -13,7 +13,7 @@ class Recipient extends Model
 
     public function post()
     {
-        return $this->belongsTo(\App\Post::class);
+        return $this->belongsTo(\App\Post::class)->with('user');
     }
 
     public function user()

@@ -38,16 +38,9 @@
                             </span>
                         </label>
 
-
                         <div class="space"></div>
 
                         <div class="clearfix">
-                            <label class="inline">
-                                <input type="checkbox" class="ace"
-                                       name="remember" {{ old('remember') ? 'checked' : '' }}/>
-                                <span class="lbl"> Remember Me</span>
-                            </label>
-
                             <button type="submit" class="width-35 pull-right btn btn-sm btn-primary">
                                 <i class="ace-icon fa fa-key"></i>
                                 <span class="bigger-110">Login</span>
@@ -67,10 +60,6 @@
                 <div class="social-login center">
                     <a class="btn btn-primary">
                         <i class="ace-icon fa fa-facebook"></i>
-                    </a>
-
-                    <a class="btn btn-info">
-                        <i class="ace-icon fa fa-twitter"></i>
                     </a>
 
                     <a class="btn btn-danger">
@@ -113,11 +102,11 @@
                 <form>
                     <fieldset>
                         <label class="block clearfix">
-														<span class="block input-icon input-icon-right">
-															<input type="email" class="form-control"
-                                                                   placeholder="Email"/>
-															<i class="ace-icon fa fa-envelope"></i>
-														</span>
+                            <span class="block input-icon input-icon-right">
+                                <input type="email" class="form-control"
+                                       placeholder="Email"/>
+                                <i class="ace-icon fa fa-envelope"></i>
+                            </span>
                         </label>
 
                         <div class="clearfix">

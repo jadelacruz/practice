@@ -12,7 +12,7 @@
     color: #000;
 }
 
-.steps>li.received.step, .steps>li.received:before{
+.steps>li.received .step, .steps>li.received:before{
     border-color: #5293C4;
 }
 

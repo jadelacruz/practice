@@ -86,57 +86,6 @@
             </tbody>
         </table>
 
-        <div id="modal-wizard" class="modal">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div id="modal-wizard-container">
-                        <div class="modal-header center">
-
-                        </div>
-
-                        <div class="modal-body">
-                            <ul class="steps">
-
-                            </ul>
-                            <hr/>
-                            <table id="simple-table" class="table  table-bordered table-hover">
-                                <thead>
-                                <tr>
-                                    <th class="center">&nbsp;</th>
-                                    <th>Recipient Name</th>
-                                    <th>Received Date</th>
-                                    <th>Confirmation Date</th>
-                                    <th class="hidden-480">Date Forwarded</th>
-                                    <th>Status</th>
-                                </tr>
-                                </thead>
-
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
-
-                    </div>
-
-                    <div class="modal-footer wizard-actions">
-                        <button class="btn btn-sm btn-prev">
-                            <i class="ace-icon fa fa-arrow-left"></i>
-                            Prev
-                        </button>
-
-                        <button class="btn btn-success btn-sm btn-next">
-                            Ok
-                            <i class="ace-icon fa fa-arrow-right icon-on-right"></i>
-                        </button>
-
-                        <button class="btn btn-danger btn-sm pull-left" data-dismiss="modal">
-                            <i class="ace-icon fa fa-times"></i>
-                            Cancel
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 
     <div class="col-xs-12">
@@ -168,50 +117,6 @@
     <script src="{{ asset('assets/js/jquery-ui.min.js') }}"></script>
     <script src="{{ asset('assets/js/jquery.ui.touch-punch.min.js') }}"></script>
     <script>
-        function generateRecipientTableData(oPost) {
-            var sTable = '';
-            var sRecipient = '';
-            if (typeof(oPost) === 'object') {
-                oPost.recipient.map(function (object, index) {
-                    var sStatus = 'pending';
-
-                    if (object.received_at !== null) {
-                        sStatus = 'received';
-                    }
-
-                    if (object.confirmed_at !== null) {
-                        sStatus = 'confirmed';
-                    }
-
-                    if (object.forwarded_at !== null) {
-                        sStatus = 'forwarded';
-                    }
-
-                    sTable += '<tr class="' + sStatus + '">' +
-                        '<td class="center">' +
-                        '<label class="pos-rel">' +
-                        '<input type="checkbox" class="ace" onclick="return false;"' + ((sStatus === 'forwarded') ? 'checked="checked"' : '') + '/>' +
-                        '<span class="lbl"></span>' +
-                        '</label>' +
-                        '</td>' +
-                        '<td>' + object.user.name + '</td>' +
-                        '<td>' + (object.received_at || 'N/A') + '</td>' +
-                        '<td>' + (object.confirmed_at || 'N/A') + '</td>' +
-                        '<td>' + (object.forwarded_at || 'N/A') + '</td>' +
-                        '<td>' + sStatus.toUpperCase() + '</td>' +
-                        '</tr>';
-
-                    sRecipient += '<li data-step="1" class="' + sStatus + '" title="' + sStatus.toUpperCase() + '">' +
-                                    '<span class="step">' + (index + 1) + '</span>' +
-                                    '<span class="title">' + object.user.name + '</span>' +
-                                  '</li>'
-                });
-            }
-            $('#simple-table').find('tbody').empty().append(sTable);
-            $('#modal-wizard').find('.modal-header').html('<h4>' + oPost.title.toUpperCase() + '</h4>');
-            $('.steps').empty().append(sRecipient);
-        };
-
         $('#dynamic-table').on('click', '.btnView', function () {
             var sId = $(this).closest('tr').attr('id');
             $.ajax({
@@ -229,8 +134,8 @@
             var sId = $(this).closest('tr').attr('id');
             var oSelectedTr = $(self).closest('tr');
             var oData = $('#dynamic-table').DataTable().row(oSelectedTr).data();
-            oData[2] = 'new Description';
-            $('#dynamic-table').DataTable().row(oSelectedTr).data(oData);
+            /*oData[2] = 'new Description';
+            $('#dynamic-table').DataTable().row(oSelectedTr).data(oData);*/
             $("#dialog-confirm").removeClass('hide').dialog({
                 resizable: false,
                 width: '320',
