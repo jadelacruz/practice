@@ -72,6 +72,7 @@ class PostController extends Controller
     {
         $aRequest = $request->all();
         $this->validator($aRequest)->validate();
+
         $aSeq = explode(',', $aRequest['seq']);
 
         $oPost = Post::create([
@@ -117,7 +118,10 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        return $post;
+        $this->aInject['sSub'] = 'create';
+        $this->aInject['aRecipient'] = User::where('id', '!=', Auth::user()->id)->get();
+        $this->aInject['oPost'] = $post;
+        return view('post.edit', $this->aInject);
     }
 
     /**
@@ -144,11 +148,14 @@ class PostController extends Controller
         return json_encode($post->delete());
     }
 
-    public function validator($aData) {
-        return Validator::make($aData, array(
-            'title' => 'required|unique:posts',
-            'description' => 'required',
-            'seq' => 'required'
-        ));
+    public function validator($aData)
+    {
+        return Validator::make($aData,
+            array(
+                'title'       => 'required|unique:posts',
+                'description' => 'required',
+                'seq'         => 'required'
+            )
+        );
     }
 }

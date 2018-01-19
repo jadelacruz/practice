@@ -15,7 +15,7 @@
                     <fieldset>
                         <label class="block clearfix">
                             <span class="block input-icon input-icon-right {{ $errors->has('email') ? 'has-error' : '' }}">
-                                <input type="text" class="form-control"
+                                <input type="email" class="form-control"
                                        value="{{ old('email') }}"
                                        name="email" placeholder="Email Address" required
                                        autofocus/>

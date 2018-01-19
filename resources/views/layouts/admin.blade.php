@@ -484,8 +484,6 @@
         </div>
     </div><!-- /.main-content -->
 
-
-
     <div class="footer">
         <div class="footer-inner">
             <div class="footer-content">
@@ -494,7 +492,6 @@
                     Application &copy; 2013-2014
                 </span>
 
-                &nbsp; &nbsp;
                 <span class="action-buttons">
                     <a href="#">
                         <i class="ace-icon fa fa-twitter-square light-blue bigger-150"></i>
@@ -519,8 +516,6 @@
     </a>
 </div><!-- /.main-container -->
 
-
-
 <div id="modal-wizard" class="modal">
     <div class="modal-dialog modal-width-90">
         <div class="modal-content">
@@ -531,10 +526,9 @@
 
                 <div class="modal-body">
                     <ul class="steps">
-
                     </ul>
                     <hr/>
-                    <table id="simple-table" class="table  table-bordered table-hover">
+                    <table id="simple-table" class="table table-bordered table-hover">
                         <thead>
                         <tr>
                             <th class="center">&nbsp;</th>
@@ -638,17 +632,17 @@
                 var sAction = '';
                 if (index === 0 && iUserId === iRecipientUserId && recipient.forwarded_at === null) {
                     bCurrentRecipient = true;
-                    bReceived = (typeof(oRecipient.received_at) === 'string') ? true : false;
-                    bConfirmed = (typeof(oRecipient.confirmed_at) === 'string') ? true : false;
-                    bForwarded= (typeof(oRecipient.forwarded_at) === 'string') ? true : false;
+                    bReceived = (typeof(oRecipient.received_at) === 'string');
+                    bConfirmed = (typeof(oRecipient.confirmed_at) === 'string');
+                    bForwarded= (typeof(oRecipient.forwarded_at) === 'string');
                     iRecipientId = recipient.id;
                 } else if (index > 0 && iUserId === iRecipientUserId) {
                     var mDateForwarded = oPost.recipient[index-1].forwarded_at;
                     if (typeof(mDateForwarded) === 'string') {
                         bCurrentRecipient = true;
-                        bReceived = (typeof(oRecipient.received_at) === 'string') ? true : false;
-                        bConfirmed = (typeof(oRecipient.confirmed_at) === 'string') ? true : false;
-                        bForwarded= (typeof(oRecipient.forwarded_at) === 'string') ? true : false;
+                        bReceived = (typeof(oRecipient.received_at) === 'string');
+                        bConfirmed = (typeof(oRecipient.confirmed_at) === 'string');
+                        bForwarded= (typeof(oRecipient.forwarded_at) === 'string');
                         iRecipientId = recipient.id;
                     }
                 }

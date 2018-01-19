@@ -7,14 +7,14 @@
         </h1>
     </div>
     @if (strlen($aAlert['type']) > 0)
-    <div class="alert alert-block alert-{{ $aAlert['type'] }}">
-        <button type="button" class="close" data-dismiss="alert">
-            <i class="ace-icon fa fa-times"></i>
-        </button>
+        <div class="alert alert-block alert-{{ $aAlert['type'] }}">
+            <button type="button" class="close" data-dismiss="alert">
+                <i class="ace-icon fa fa-times"></i>
+            </button>
 
-        <i class="ace-icon fa fa-{{ $aAlert['type'] === 'success' ? 'check' : 'close' }} green"></i>
-        {{ $aAlert['msg'] }}
-    </div>
+            <i class="ace-icon fa fa-{{ $aAlert['type'] === 'success' ? 'check' : 'close' }} green"></i>
+            {{ $aAlert['msg'] }}
+        </div>
     @endif
     <div class="col-sm-12">
         <form class="form-horizontal" role="form" action="{{ route('post') }}" method="POST">
@@ -26,7 +26,7 @@
                     <input type="text" id="title" name="title" placeholder="Title"
                            class="col-xs-10 col-sm-5" value="{{ old('title') }}" required>
                     @if ($errors->has('title'))
-                    <span class="help-inline col-xs-12 col-sm-12">
+                        <span class="help-inline col-xs-12 col-sm-12">
                         <span class="middle"><i>{{ json_decode($errors)->title[0] }}</i></span>
                     </span>
                     @endif
@@ -50,7 +50,7 @@
 
             <div class="form-group {{ $errors->has('seq') ? 'has-error' : '' }}">
                 <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="food">Recipient/s</label>
-                <input type="hidden" id="seq" name="seq" value="" />
+                <input type="hidden" id="seq" name="seq" value=""/>
                 <div class="col-xs-12 col-sm-9">
                     <select id="recipient" name="recipient[]" class="multiselect" multiple="">
                         @foreach ($aRecipient as $oRecipient)
@@ -58,7 +58,7 @@
                         @endforeach
                     </select>
                     @if ($errors->has('seq'))
-                    <span class="help-inline col-xs-12 col-sm-12">
+                        <span class="help-inline col-xs-12 col-sm-12">
                         <span class="middle"><i>Please select at least 1 recipient.</i></span>
                     </span>
                     @endif
@@ -126,6 +126,7 @@
                     oStep.empty();
                 }
             }
+
             $('#duallist').change(function () {
 
             });
@@ -155,7 +156,6 @@
                 }
                 generateStep(aRecipient, aName);
             });
-
         });
 
         $('.multiselect').multiselect({
@@ -173,7 +173,7 @@
             }
         });
 
-        $(document).one('ajaxloadstart.page', function(e) {
+        $(document).one('ajaxloadstart.page', function (e) {
             $('.multiselect').multiselect('destroy');
         });
     </script>

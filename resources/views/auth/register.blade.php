@@ -83,7 +83,6 @@
                                  class="img-thumbnail img-responsive center-block" id="avatarImg">
                             <input type="file" accept="image/*" id="avatar" name="avatar">
                         </label>
-
                         <div class="space-24"></div>
 
                         <div class="clearfix">
